@@ -94,7 +94,7 @@ def test_coordination_module_shapes_and_zero_init_bias():
     prompt_summary = torch.randn(2, 8)
     text_summary = torch.randn(2, 8)
     action_summary = torch.randn(2, 8)
-    next_state, text_bias, action_bias = module(
+    next_state, text_bias, action_bias, text_delta, action_delta = module(
         coord_state=coord_state,
         prompt_summary=prompt_summary,
         text_summary=text_summary,
@@ -103,5 +103,9 @@ def test_coordination_module_shapes_and_zero_init_bias():
     assert next_state.shape == (2, 4, 8)
     assert text_bias.shape == (2,)
     assert action_bias.shape == (2,)
+    assert text_delta.shape == (2, 8)
+    assert action_delta.shape == (2, 8)
     assert torch.allclose(text_bias, torch.zeros_like(text_bias))
     assert torch.allclose(action_bias, torch.zeros_like(action_bias))
+    assert torch.allclose(text_delta, torch.zeros_like(text_delta))
+    assert torch.allclose(action_delta, torch.zeros_like(action_delta))

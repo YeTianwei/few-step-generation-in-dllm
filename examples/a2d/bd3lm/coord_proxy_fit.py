@@ -14,6 +14,7 @@ import torch
 import transformers
 
 import dllm
+from dllm.core.samplers.coord_proxy import build_text_action_region_masks
 
 
 def _make_proxy_case(
@@ -26,26 +27,24 @@ def _make_proxy_case(
     action_start_marker: str,
     action_end_marker: str,
 ) -> tuple[list[int], list[int]]:
-    text_target_ids = tokenizer(text_target, add_special_tokens=False).input_ids
-    action_target_ids = tokenizer(action_target, add_special_tokens=False).input_ids
-
-    prompt = (
-        f"Instruction: {instruction}\n"
-        f"{text_start_marker}"
-        + (" " + tokenizer.mask_token) * len(text_target_ids)
-        + f" {text_end_marker}\n"
-        f"{action_start_marker}"
-        + (" " + tokenizer.mask_token) * len(action_target_ids)
-        + f" {action_end_marker}"
-    )
-    prompt_ids = tokenizer(prompt, add_special_tokens=False).input_ids
-
     target = (
         f"Instruction: {instruction}\n"
-        f"{text_start_marker} {text_target} {text_end_marker}\n"
-        f"{action_start_marker} {action_target} {action_end_marker}"
+        f"{text_start_marker}{text_target} {text_end_marker}\n"
+        f"{action_start_marker}{action_target} {action_end_marker}"
     )
     target_ids = tokenizer(target, add_special_tokens=False).input_ids
+    text_mask, action_mask, _ = build_text_action_region_masks(
+        tokenizer,
+        [target_ids],
+        text_start_marker=text_start_marker,
+        text_end_marker=text_end_marker,
+        action_start_marker=action_start_marker,
+        action_end_marker=action_end_marker,
+    )
+    prompt_ids = list(target_ids)
+    for idx, keep in enumerate((text_mask | action_mask)[0].tolist()):
+        if keep:
+            prompt_ids[idx] = tokenizer.mask_token_id
     return prompt_ids, target_ids
 
 
@@ -67,7 +66,9 @@ class ScriptArguments:
 class SamplerConfig(dllm.core.samplers.CoordinationProxySamplerConfig):
     coord_tokens: int = 64
     coord_confidence_scale: float = 0.25
-    few_step_budget: int = 4
+    few_step_budget: int = 8
+    steps: int = 24
+    block_size: int | None = None
 
 
 parser = transformers.HfArgumentParser((ScriptArguments, SamplerConfig))
@@ -89,18 +90,48 @@ coord_module.train()
 
 optimizer = torch.optim.AdamW(coord_module.parameters(), lr=script_args.learning_rate)
 
-cases = [
+objects = [
+    ("red block", "tray"),
+    ("blue cup", "kettle"),
+    ("green sponge", "sink"),
+    ("yellow bottle", "rack"),
+]
+actions = [
     (
-        "Pick up the red block and place it on the tray.",
-        "assistant: pick the red block and place it on the tray.",
-        "ACT_PICK OBJ_RED OBJ_BLOCK ACT_PLACE OBJ_TRAY",
+        "Pick up the {obj} and place it near the {dst}.",
+        " I will pick up the {obj} and place it near the {dst}.",
+        " move to the {obj}, grasp it, carry it to the {dst}, and put it down.",
     ),
     (
-        "Open the drawer and then press the green button.",
-        "assistant: open the drawer and press the green button.",
-        "ACT_OPEN OBJ_DRAWER ACT_PRESS OBJ_GREEN OBJ_BUTTON",
+        "Move the {obj} next to the {dst}.",
+        " I will move the {obj} so it ends up next to the {dst}.",
+        " approach the {obj}, pick it up, move beside the {dst}, and release it there.",
     ),
 ]
+stateful = [
+    (
+        "Open the drawer and then press the green button.",
+        " I will open the drawer and then press the green button.",
+        " pull the drawer open, move to the green button, and press it once.",
+    ),
+    (
+        "Close the lid before touching the red switch.",
+        " I will close the lid before I touch the red switch.",
+        " close the lid, move to the red switch, and press it after the lid is shut.",
+    ),
+]
+
+cases = []
+for obj, dst in objects:
+    for instruction_fmt, text_fmt, action_fmt in actions:
+        cases.append(
+            (
+                instruction_fmt.format(obj=obj, dst=dst),
+                text_fmt.format(obj=obj, dst=dst),
+                action_fmt.format(obj=obj, dst=dst),
+            )
+        )
+cases.extend(stateful)
 
 prepared = []
 for instruction, text_target, action_target in cases:
@@ -142,6 +173,11 @@ for epoch in range(script_args.num_epochs):
             enable_coordination=True,
         )
         biased_logits = logits.clone()
+        text_delta_logits, action_delta_logits = sampler.compute_region_delta_logits(
+            text_delta=coord_features["text_delta"],
+            action_delta=coord_features["action_delta"],
+            hidden_size=hidden_states.size(-1),
+        )
         text_bias = coord_features["text_bias"].view(-1, 1, 1)
         action_bias = coord_features["action_bias"].view(-1, 1, 1)
         biased_logits = biased_logits + text_bias * text_mask.unsqueeze(-1).to(
@@ -149,6 +185,14 @@ for epoch in range(script_args.num_epochs):
         )
         biased_logits = biased_logits + action_bias * action_mask.unsqueeze(-1).to(
             biased_logits.dtype
+        )
+        biased_logits = biased_logits + (
+            text_mask.unsqueeze(-1).to(biased_logits.dtype)
+            * text_delta_logits.unsqueeze(1).to(biased_logits.dtype)
+        )
+        biased_logits = biased_logits + (
+            action_mask.unsqueeze(-1).to(biased_logits.dtype)
+            * action_delta_logits.unsqueeze(1).to(biased_logits.dtype)
         )
 
         if not masked_positions.any():

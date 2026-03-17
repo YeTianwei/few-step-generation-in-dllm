@@ -13,6 +13,7 @@ from dataclasses import dataclass
 import transformers
 
 import dllm
+from dllm.core.samplers.coord_proxy import build_text_action_region_masks
 
 
 def _make_proxy_case(
@@ -25,38 +26,52 @@ def _make_proxy_case(
     action_start_marker: str,
     action_end_marker: str,
 ) -> tuple[list[int], list[int]]:
-    text_target_ids = tokenizer(text_target, add_special_tokens=False).input_ids
-    action_target_ids = tokenizer(action_target, add_special_tokens=False).input_ids
-
-    prompt = (
-        f"Instruction: {instruction}\n"
-        f"{text_start_marker}"
-        + (" " + tokenizer.mask_token) * len(text_target_ids)
-        + f" {text_end_marker}\n"
-        f"{action_start_marker}"
-        + (" " + tokenizer.mask_token) * len(action_target_ids)
-        + f" {action_end_marker}"
-    )
-    prompt_ids = tokenizer(prompt, add_special_tokens=False).input_ids
-
     target = (
         f"Instruction: {instruction}\n"
-        f"{text_start_marker} {text_target} {text_end_marker}\n"
-        f"{action_start_marker} {action_target} {action_end_marker}"
+        f"{text_start_marker}{text_target} {text_end_marker}\n"
+        f"{action_start_marker}{action_target} {action_end_marker}"
     )
     target_ids = tokenizer(target, add_special_tokens=False).input_ids
+    text_mask, action_mask, _ = build_text_action_region_masks(
+        tokenizer,
+        [target_ids],
+        text_start_marker=text_start_marker,
+        text_end_marker=text_end_marker,
+        action_start_marker=action_start_marker,
+        action_end_marker=action_end_marker,
+    )
+    prompt_ids = list(target_ids)
+    for idx, keep in enumerate((text_mask | action_mask)[0].tolist()):
+        if keep:
+            prompt_ids[idx] = tokenizer.mask_token_id
     return prompt_ids, target_ids
 
 
 def _report_metrics(tokenizer, prediction, target, label: str) -> dict[str, float]:
     pred_tokens = prediction.sequences[0].tolist()
     tgt_tokens = target
-    shared = min(len(pred_tokens), len(tgt_tokens))
-    token_acc = sum(int(a == b) for a, b in zip(pred_tokens[:shared], tgt_tokens[:shared])) / max(shared, 1)
+    text_mask, action_mask, _ = build_text_action_region_masks(
+        tokenizer,
+        [tgt_tokens],
+        text_start_marker=SamplerConfig.text_start_marker,
+        text_end_marker=SamplerConfig.text_end_marker,
+        action_start_marker=SamplerConfig.action_start_marker,
+        action_end_marker=SamplerConfig.action_end_marker,
+    )
+    region_mask = (text_mask | action_mask)[0].tolist()
+    masked_pairs = [
+        (pred, tgt)
+        for pred, tgt, keep in zip(pred_tokens, tgt_tokens, region_mask)
+        if keep
+    ]
+    token_acc = sum(int(a == b) for a, b in masked_pairs) / max(len(masked_pairs), 1)
     decoded_pred = tokenizer.decode(pred_tokens, skip_special_tokens=False)
     decoded_tgt = tokenizer.decode(tgt_tokens, skip_special_tokens=False)
-    exact = float(pred_tokens[: len(tgt_tokens)] == tgt_tokens)
-    print(f"\n[{label}] token_acc={token_acc:.3f} exact={exact:.1f} effective_steps={prediction.effective_steps}")
+    exact = float(masked_pairs and all(a == b for a, b in masked_pairs))
+    print(
+        f"\n[{label}] region_token_acc={token_acc:.3f} "
+        f"region_exact={exact:.1f} effective_steps={prediction.effective_steps}"
+    )
     print("prediction:")
     print(decoded_pred)
     print("target:")
@@ -78,9 +93,9 @@ class ScriptArguments:
 
 @dataclass
 class SamplerConfig(dllm.core.samplers.CoordinationProxySamplerConfig):
-    steps: int = 16
-    few_step_budget: int = 4
-    block_size: int | None = 32
+    steps: int = 24
+    few_step_budget: int = 8
+    block_size: int | None = None
     temperature: float = 0.0
     coord_tokens: int = 64
     text_transfer_ratio: float = 0.7
@@ -94,13 +109,23 @@ def get_default_cases() -> list[tuple[str, str, str]]:
     return [
         (
             "Pick up the red block and place it on the tray.",
-            "assistant: pick the red block and place it on the tray.",
-            "ACT_PICK OBJ_RED OBJ_BLOCK ACT_PLACE OBJ_TRAY",
+            " I will pick up the red block and place it on the tray.",
+            " reach for the red block, grasp it, move to the tray, and release it.",
         ),
         (
             "Open the drawer and then press the green button.",
-            "assistant: open the drawer and press the green button.",
-            "ACT_OPEN OBJ_DRAWER ACT_PRESS OBJ_GREEN OBJ_BUTTON",
+            " I will open the drawer and then press the green button.",
+            " pull the drawer open, move to the green button, and press it once.",
+        ),
+        (
+            "Move the blue cup next to the kettle.",
+            " I will move the blue cup so that it ends up next to the kettle.",
+            " approach the blue cup, pick it up, move beside the kettle, and set it down.",
+        ),
+        (
+            "Press the red switch after closing the lid.",
+            " I will close the lid first and then press the red switch.",
+            " close the lid, move to the red switch, and press it after the lid is shut.",
         ),
     ]
 

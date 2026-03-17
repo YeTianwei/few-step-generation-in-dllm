@@ -27,3 +27,11 @@
 - Fixed dtype mismatches between the `bfloat16` backbone and the newly added coordination module.
 - Verified that `python examples/a2d/bd3lm/coord_proxy_sample.py` now runs end-to-end on `dllm-hub/Qwen3-0.6B-diffusion-bd3lm-v0.1`.
 - First observed result: the proxy pipeline is runnable and the coordinated branch uses slightly fewer effective steps, but generation quality is still weak and needs proxy-task adaptation or coordination training before it is meaningful.
+
+### Natural-language proxy adaptation experiment
+- Replaced the original symbolic action proxy with a natural-language `Assistant response` plus `Action sequence` format to better match the pretrained text backbone.
+- Changed prompt construction to operate directly at the token level: target sequences are built first, then only the text/action spans are replaced with mask tokens. This keeps prompt and target lengths exactly aligned for training and evaluation.
+- Tightened evaluation to report token accuracy only on the generated text/action regions rather than over the whole sequence.
+- Added a stronger learnable coordination pathway: the coordination module now predicts region-specific hidden deltas that are projected through the LM head into token-level logit adjustments.
+- Ran a 30-epoch coordination-only proxy training run and evaluated the resulting checkpoint.
+- Result: the setup trains stably in terms of loss reduction, but generation quality is still poor; the learned coordination module currently overconfidently collapses to low-quality punctuation-heavy completions and does not yet improve region token accuracy over the baseline.

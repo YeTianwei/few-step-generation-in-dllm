@@ -47,11 +47,17 @@ class CoordinationModule(nn.Module):
         )
         self.state_head = nn.Linear(coord_hidden_size, coord_hidden_size)
         self.bias_head = nn.Linear(coord_hidden_size, 2)
+        self.text_delta_head = nn.Linear(coord_hidden_size, coord_hidden_size)
+        self.action_delta_head = nn.Linear(coord_hidden_size, coord_hidden_size)
 
         nn.init.zeros_(self.state_head.weight)
         nn.init.zeros_(self.state_head.bias)
         nn.init.zeros_(self.bias_head.weight)
         nn.init.zeros_(self.bias_head.bias)
+        nn.init.zeros_(self.text_delta_head.weight)
+        nn.init.zeros_(self.text_delta_head.bias)
+        nn.init.zeros_(self.action_delta_head.weight)
+        nn.init.zeros_(self.action_delta_head.bias)
 
     def forward(
         self,
@@ -59,7 +65,7 @@ class CoordinationModule(nn.Module):
         prompt_summary: torch.Tensor,
         text_summary: torch.Tensor,
         action_summary: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         input_dtype = coord_state.dtype
         prev_summary = coord_state.mean(dim=1)
         features = torch.cat(
@@ -67,13 +73,18 @@ class CoordinationModule(nn.Module):
         )
         features = features.to(self.input_norm.weight.dtype)
         hidden = self.mlp(self.input_norm(features))
+        prev_summary = prev_summary.to(hidden.dtype)
         next_summary = torch.tanh(prev_summary + self.state_head(hidden))
         bias_delta = self.bias_head(hidden)
+        text_delta = self.text_delta_head(hidden)
+        action_delta = self.action_delta_head(hidden)
         next_state = _repeat_coord_tokens(next_summary, self.coord_tokens)
         return (
             next_state.to(input_dtype),
             bias_delta[:, 0].to(input_dtype),
             bias_delta[:, 1].to(input_dtype),
+            text_delta.to(input_dtype),
+            action_delta.to(input_dtype),
         )
 
     def save_pretrained(self, output_dir: str | Path) -> None:
@@ -266,10 +277,10 @@ class CoordinationProxySamplerConfig(BaseSamplerConfig):
     early_stop_threshold: float = 0.9
     enable_coordination: bool = True
     coord_module_path: str | None = None
-    text_start_marker: str = "[TEXT_START]"
-    text_end_marker: str = "[TEXT_END]"
-    action_start_marker: str = "[ACT_START]"
-    action_end_marker: str = "[ACT_END]"
+    text_start_marker: str = "Assistant response:"
+    text_end_marker: str = "Action sequence:"
+    action_start_marker: str = "Action sequence:"
+    action_end_marker: str = "End of plan."
 
 
 @dataclass
@@ -353,7 +364,7 @@ class CoordinationProxySampler(BaseSampler):
         action_summary: torch.Tensor,
         config: CoordinationProxySamplerConfig,
         coordination_module: CoordinationModule | None = None,
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         combined = torch.stack(
             [prompt_summary, text_summary, action_summary],
             dim=1,
@@ -369,14 +380,27 @@ class CoordinationProxySampler(BaseSampler):
         heuristic_state = _repeat_coord_tokens(heuristic_state, config.coord_tokens)
         if coordination_module is None:
             zero = prompt_summary.new_zeros(prompt_summary.size(0))
-            return heuristic_state, zero, zero
-        learned_state, learned_text_bias, learned_action_bias = coordination_module(
+            zero_delta = prompt_summary.new_zeros(prompt_summary.shape)
+            return heuristic_state, zero, zero, zero_delta, zero_delta
+        (
+            learned_state,
+            learned_text_bias,
+            learned_action_bias,
+            text_delta,
+            action_delta,
+        ) = coordination_module(
             coord_state=heuristic_state,
             prompt_summary=prompt_summary,
             text_summary=text_summary,
             action_summary=action_summary,
         )
-        return learned_state, learned_text_bias, learned_action_bias
+        return (
+            learned_state,
+            learned_text_bias,
+            learned_action_bias,
+            text_delta,
+            action_delta,
+        )
 
     def _region_transfer(
         self,
@@ -470,7 +494,13 @@ class CoordinationProxySampler(BaseSampler):
                 config=config, hidden_size=hidden_dim
             )
 
-        coord_state, learned_text_bias, learned_action_bias = self._update_coord_state(
+        (
+            coord_state,
+            learned_text_bias,
+            learned_action_bias,
+            text_delta,
+            action_delta,
+        ) = self._update_coord_state(
             coord_state=coord_state,
             prompt_summary=prompt_summary,
             text_summary=text_summary,
@@ -516,7 +546,25 @@ class CoordinationProxySampler(BaseSampler):
             "action_bias": action_bias,
             "heuristic_text_bias": heuristic_text_bias,
             "heuristic_action_bias": heuristic_action_bias,
+            "text_delta": text_delta,
+            "action_delta": action_delta,
         }
+
+    def compute_region_delta_logits(
+        self,
+        text_delta: torch.Tensor,
+        action_delta: torch.Tensor,
+        hidden_size: int,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        output_embeddings = self.model.get_output_embeddings()
+        if output_embeddings is None:
+            raise ValueError("model does not expose output embeddings")
+        lm_weight = output_embeddings.weight
+        text_hidden = _project_vector(text_delta, hidden_size).to(lm_weight.dtype)
+        action_hidden = _project_vector(action_delta, hidden_size).to(lm_weight.dtype)
+        text_delta_logits = torch.matmul(text_hidden, lm_weight.transpose(0, 1))
+        action_delta_logits = torch.matmul(action_hidden, lm_weight.transpose(0, 1))
+        return text_delta_logits, action_delta_logits
 
     @torch.no_grad()
     def sample(
@@ -630,6 +678,20 @@ class CoordinationProxySampler(BaseSampler):
                 coord_state = coord_features["coord_state"]
                 text_bias = coord_features["text_bias"]
                 action_bias = coord_features["action_bias"]
+                if enable_coordination:
+                    text_delta_logits, action_delta_logits = self.compute_region_delta_logits(
+                        text_delta=coord_features["text_delta"],
+                        action_delta=coord_features["action_delta"],
+                        hidden_size=hidden_states.size(-1),
+                    )
+                    logits = logits + (
+                        text_mask.unsqueeze(-1).to(logits.dtype)
+                        * text_delta_logits.unsqueeze(1).to(logits.dtype)
+                    )
+                    logits = logits + (
+                        action_mask.unsqueeze(-1).to(logits.dtype)
+                        * action_delta_logits.unsqueeze(1).to(logits.dtype)
+                    )
 
                 text_region = current_mask & text_mask
                 action_region = current_mask & action_mask
