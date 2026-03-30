@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "text_region_token_acc": 0.028901734104046242,
+    "action_region_token_acc": 0.07742741180143616,
+    "joint_region_token_acc": 0.07269653423499578,
+    "text_region_exact": 0.0,
+    "action_region_exact": 0.0,
+    "joint_region_exact": 0.0,
+    "text_region_tokens": 346.0,
+    "action_region_tokens": 3203.0,
+    "joint_region_tokens": 3549.0,
+    "effective_steps": 8.0,
+    "latency_sec": 3.5100175635889173
+  },
+  "coordinated": {
+    "text_region_token_acc": 0.031791907514450865,
+    "action_region_token_acc": 0.07742741180143616,
+    "joint_region_token_acc": 0.07297830374753451,
+    "text_region_exact": 0.0,
+    "action_region_exact": 0.0,
+    "joint_region_exact": 0.0,
+    "text_region_tokens": 346.0,
+    "action_region_tokens": 3203.0,
+    "joint_region_tokens": 3549.0,
+    "effective_steps": 1.0,
+    "latency_sec": 0.5365823274478316
+  },
+  "num_cases": 1,
+  "filter_stats": {
+    "kept": 1000,
+    "dropped": 0
+  }
+}

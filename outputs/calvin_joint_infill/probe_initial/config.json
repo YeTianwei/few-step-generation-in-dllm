@@ -1,0 +1,11 @@
+{
+  "jsonl_path": "/data/ytw/VLA_baseline/calvin/outputs/task_ABC_D_batches/training.jsonl",
+  "output_root": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill",
+  "experiment_name": "probe_initial",
+  "seed": 42,
+  "round_digits": 4,
+  "model_name_or_path": "dllm-hub/Qwen3-0.6B-diffusion-bd3lm-v0.1",
+  "experiment_dir": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/probe_initial",
+  "tokenizer_name": "dllm-hub/Qwen3-0.6B-diffusion-bd3lm-v0.1",
+  "token_filter_desc": "无过滤，仅做全量探查"
+}

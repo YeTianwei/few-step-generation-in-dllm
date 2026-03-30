@@ -1,0 +1,41 @@
+{
+  "baseline": {
+    "text_region_token_acc": 0.033444816053511704,
+    "action_region_token_acc": 0.05527795128044972,
+    "joint_region_token_acc": 0.053413310482719224,
+    "text_region_exact": 0.0,
+    "action_region_exact": 0.0,
+    "joint_region_exact": 0.0,
+    "text_region_tokens": 299.0,
+    "action_region_tokens": 3202.0,
+    "joint_region_tokens": 3501.0,
+    "effective_steps": 8.0,
+    "latency_sec": 3.0882047759369016
+  },
+  "coordinated": {
+    "text_region_token_acc": 0.033444816053511704,
+    "action_region_token_acc": 0.05527795128044972,
+    "joint_region_token_acc": 0.053413310482719224,
+    "text_region_exact": 0.0,
+    "action_region_exact": 0.0,
+    "joint_region_exact": 0.0,
+    "text_region_tokens": 299.0,
+    "action_region_tokens": 3202.0,
+    "joint_region_tokens": 3501.0,
+    "effective_steps": 8.0,
+    "latency_sec": 3.1574624134227633
+  },
+  "epoch_losses": [
+    6.578125
+  ],
+  "filter_stats": {
+    "kept": 1000,
+    "dropped": 0
+  },
+  "training_summary": {
+    "epochs_completed": 1,
+    "final_train_loss": 6.578125,
+    "coord_module_output": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/fit_smoke/coordination_module",
+    "device": "cuda"
+  }
+}
