@@ -33,6 +33,7 @@ from calvin_joint_infill import (
     summarize_lengths,
     normalize_action_representation,
     token_length_stats,
+    with_experiment_metadata,
 )
 
 
@@ -124,7 +125,7 @@ def main() -> None:
         ],
         "mask_validation_pass_rate": pass_rate,
     }
-    config = config_to_dict(script_args)
+    config = with_experiment_metadata(config_to_dict(script_args))
     config.update(
         {
             "experiment_dir": str(experiment_dir),

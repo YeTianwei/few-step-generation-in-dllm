@@ -33,6 +33,10 @@ def _require_matplotlib() -> None:
             "matplotlib is required for CALVIN joint infill plotting helpers"
         )
 
+
+def _can_plot() -> bool:
+    return plt is not None
+
 from dllm.core.samplers.coord_proxy import build_text_action_region_masks
 
 DATASET_PATH = Path(
@@ -453,7 +457,8 @@ def save_bar_chart(
     ylabel: str,
     output_path: Path,
 ) -> None:
-    _require_matplotlib()
+    if not _can_plot():
+        return
     ensure_dir(output_path.parent)
     labels = list(values.keys())
     heights = [values[label] for label in labels]
@@ -475,7 +480,8 @@ def save_histogram(
     output_path: Path,
     bins: int = 20,
 ) -> None:
-    _require_matplotlib()
+    if not _can_plot():
+        return
     ensure_dir(output_path.parent)
     plt.figure(figsize=(8, 5))
     plt.hist(values, bins=bins, color="#55A868", edgecolor="black")
@@ -495,7 +501,8 @@ def save_grouped_metric_chart(
     output_path: Path,
     title: str,
 ) -> None:
-    _require_matplotlib()
+    if not _can_plot():
+        return
     ensure_dir(output_path.parent)
     labels = metric_keys
     baseline_vals = [baseline.get(key, 0.0) for key in labels]
@@ -526,7 +533,8 @@ def save_curve(
     ylabel: str,
     output_path: Path,
 ) -> None:
-    _require_matplotlib()
+    if not _can_plot():
+        return
     ensure_dir(output_path.parent)
     plt.figure(figsize=(8, 5))
     plt.plot(range(1, len(ys) + 1), ys, marker="o", color="#C44E52")
@@ -975,7 +983,8 @@ def save_case_table_plot(
     output_path: Path,
     title: str,
 ) -> None:
-    _require_matplotlib()
+    if not _can_plot():
+        return
     ensure_dir(output_path.parent)
     if not rows:
         return

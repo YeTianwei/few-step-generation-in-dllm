@@ -1,0 +1,193 @@
+{
+  "sample_count": 1000,
+  "task_count": 34,
+  "top_tasks": [
+    [
+      "open_drawer",
+      74
+    ],
+    [
+      "place_in_drawer",
+      59
+    ],
+    [
+      "move_slider_left",
+      58
+    ],
+    [
+      "move_slider_right",
+      58
+    ],
+    [
+      "place_in_slider",
+      57
+    ],
+    [
+      "turn_on_led",
+      56
+    ],
+    [
+      "close_drawer",
+      52
+    ],
+    [
+      "turn_off_lightbulb",
+      48
+    ],
+    [
+      "turn_on_lightbulb",
+      45
+    ],
+    [
+      "turn_off_led",
+      44
+    ],
+    [
+      "lift_red_block_table",
+      42
+    ],
+    [
+      "stack_block",
+      35
+    ],
+    [
+      "unstack_block",
+      34
+    ],
+    [
+      "lift_pink_block_table",
+      30
+    ],
+    [
+      "lift_red_block_drawer",
+      27
+    ],
+    [
+      "lift_blue_block_table",
+      27
+    ],
+    [
+      "push_into_drawer",
+      27
+    ],
+    [
+      "lift_pink_block_drawer",
+      24
+    ],
+    [
+      "lift_red_block_slider",
+      23
+    ],
+    [
+      "lift_blue_block_slider",
+      21
+    ],
+    [
+      "lift_blue_block_drawer",
+      19
+    ],
+    [
+      "rotate_red_block_left",
+      19
+    ],
+    [
+      "lift_pink_block_slider",
+      17
+    ],
+    [
+      "rotate_blue_block_left",
+      15
+    ],
+    [
+      "rotate_blue_block_right",
+      14
+    ],
+    [
+      "push_blue_block_left",
+      13
+    ],
+    [
+      "push_blue_block_right",
+      11
+    ],
+    [
+      "push_pink_block_left",
+      10
+    ],
+    [
+      "rotate_pink_block_left",
+      10
+    ],
+    [
+      "push_red_block_left",
+      8
+    ],
+    [
+      "rotate_red_block_right",
+      7
+    ],
+    [
+      "push_red_block_right",
+      7
+    ],
+    [
+      "rotate_pink_block_right",
+      6
+    ],
+    [
+      "push_pink_block_right",
+      3
+    ]
+  ],
+  "think_char_stats": {
+    "min": 884.0,
+    "p50": 1289.0,
+    "p90": 1488.0,
+    "p95": 1554.0,
+    "max": 1918.0,
+    "mean": 1295.092
+  },
+  "action_step_stats": {
+    "min": 33.0,
+    "p50": 64.0,
+    "p90": 64.0,
+    "p95": 64.0,
+    "max": 64.0,
+    "mean": 58.186
+  },
+  "target_token_stats_by_representation": {
+    "float_4dp": {
+      "min": 1902.0,
+      "p50": 3508.0,
+      "p90": 3569.0,
+      "p95": 3583.0,
+      "max": 3656.0,
+      "mean": 3231.155
+    },
+    "float_2dp": {
+      "min": 1440.0,
+      "p50": 2612.0,
+      "p90": 2673.0,
+      "p95": 2687.0,
+      "max": 2760.0,
+      "mean": 2416.551
+    },
+    "bucketed_int": {
+      "min": 746.0,
+      "p50": 1268.0,
+      "p90": 1329.0,
+      "p95": 1343.0,
+      "max": 1415.0,
+      "mean": 1194.16
+    }
+  },
+  "target_token_stats": {
+    "min": 1902.0,
+    "p50": 3508.0,
+    "p90": 3569.0,
+    "p95": 3583.0,
+    "max": 3656.0,
+    "mean": 3231.155
+  },
+  "mask_validation_pass_rate": 1.0
+}
