@@ -1,0 +1,15 @@
+{
+  "output_root": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill",
+  "experiment_dir": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/failure_diagnosis_formal",
+  "bucket_count": 5,
+  "top_k_tasks": 10,
+  "include_supporting_runs": true,
+  "repetition_threshold": 0.3,
+  "punctuation_threshold": 0.35,
+  "unique_ratio_threshold": 0.2,
+  "action_failure_threshold": 0.02,
+  "text_gain_threshold": 0.003,
+  "action_flat_threshold": 0.001,
+  "experiment_date": "2026-03-30",
+  "experiment_timestamp": "2026-03-30T16:52:14"
+}

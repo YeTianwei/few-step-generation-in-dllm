@@ -19,8 +19,19 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-import matplotlib.pyplot as plt
 import torch
+
+try:
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError:  # pragma: no cover - optional plotting dependency
+    plt = None
+
+
+def _require_matplotlib() -> None:
+    if plt is None:
+        raise ModuleNotFoundError(
+            "matplotlib is required for CALVIN joint infill plotting helpers"
+        )
 
 from dllm.core.samplers.coord_proxy import build_text_action_region_masks
 
@@ -36,6 +47,7 @@ TEXT_START_MARKER = "Assistant response:"
 TEXT_END_MARKER = "Action sequence:"
 ACTION_START_MARKER = "Action sequence:"
 ACTION_END_MARKER = "End of plan."
+ACTION_REPRESENTATIONS = ("float_4dp", "float_2dp", "bucketed_int")
 
 
 @dataclass
@@ -78,13 +90,84 @@ def dump_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
-def serialize_actions(actions: list[list[float]], round_digits: int = 4) -> str:
-    fmt = f"{{:.{round_digits}f}}"
+def normalize_action_representation(action_representation: str) -> str:
+    normalized = action_representation.strip().lower()
+    if normalized not in ACTION_REPRESENTATIONS:
+        raise ValueError(
+            "action_representation must be one of "
+            f"{ACTION_REPRESENTATIONS}, got {action_representation!r}"
+        )
+    return normalized
+
+
+def _bucket_action_value(value: float, bucket_count: int) -> int:
+    if bucket_count <= 1:
+        raise ValueError("action_bucket_count must be greater than 1")
+    clipped = max(-1.0, min(1.0, float(value)))
+    scaled = (clipped + 1.0) / 2.0 * (bucket_count - 1)
+    return int(round(scaled))
+
+
+def action_representation_title(
+    action_representation: str,
+    *,
+    round_digits: int,
+    action_bucket_count: int,
+) -> str:
+    normalized = normalize_action_representation(action_representation)
+    if normalized == "float_4dp":
+        return f"float_4dp（{round_digits} 位小数）"
+    if normalized == "float_2dp":
+        return "float_2dp（2 位小数）"
+    return f"bucketed_int（{action_bucket_count} 桶）"
+
+
+def action_representation_description(
+    action_representation: str,
+    *,
+    round_digits: int,
+    action_bucket_count: int,
+) -> str:
+    normalized = normalize_action_representation(action_representation)
+    if normalized == "float_4dp":
+        return f"四舍五入到 {round_digits} 位小数"
+    if normalized == "float_2dp":
+        return "四舍五入到 2 位小数"
+    return f"将每维动作裁剪到 [-1, 1] 后离散成 {action_bucket_count} 个整数桶"
+
+
+def serialize_actions_with_representation(
+    actions: list[list[float]],
+    *,
+    action_representation: str = "float_4dp",
+    round_digits: int = 4,
+    action_bucket_count: int = 8,
+) -> str:
+    normalized = normalize_action_representation(action_representation)
+    if normalized in {"float_4dp", "float_2dp"}:
+        digits = round_digits if normalized == "float_4dp" else 2
+        fmt = f"{{:.{digits}f}}"
+        steps = []
+        for step in actions:
+            values = ",".join(fmt.format(float(value)) for value in step)
+            steps.append(f"[{values}]")
+        return "; ".join(steps)
+
     steps = []
     for step in actions:
-        values = ",".join(fmt.format(float(value)) for value in step)
+        values = ",".join(
+            str(_bucket_action_value(value, action_bucket_count)) for value in step
+        )
         steps.append(f"[{values}]")
     return "; ".join(steps)
+
+
+def serialize_actions(actions: list[list[float]], round_digits: int = 4) -> str:
+    return serialize_actions_with_representation(
+        actions,
+        action_representation="float_4dp",
+        round_digits=round_digits,
+    )
 
 
 def make_joint_target(
@@ -195,9 +278,16 @@ def build_case(
     tokenizer,
     example: CalvinJointInfillExample,
     *,
+    action_representation: str = "float_4dp",
     round_digits: int = 4,
+    action_bucket_count: int = 8,
 ) -> tuple[list[int], list[int], str]:
-    action_text = serialize_actions(example.actions, round_digits=round_digits)
+    action_text = serialize_actions_with_representation(
+        example.actions,
+        action_representation=action_representation,
+        round_digits=round_digits,
+        action_bucket_count=action_bucket_count,
+    )
     target = make_joint_target(
         instruction=example.instruction,
         think=example.think,
@@ -363,6 +453,7 @@ def save_bar_chart(
     ylabel: str,
     output_path: Path,
 ) -> None:
+    _require_matplotlib()
     ensure_dir(output_path.parent)
     labels = list(values.keys())
     heights = [values[label] for label in labels]
@@ -384,6 +475,7 @@ def save_histogram(
     output_path: Path,
     bins: int = 20,
 ) -> None:
+    _require_matplotlib()
     ensure_dir(output_path.parent)
     plt.figure(figsize=(8, 5))
     plt.hist(values, bins=bins, color="#55A868", edgecolor="black")
@@ -403,6 +495,7 @@ def save_grouped_metric_chart(
     output_path: Path,
     title: str,
 ) -> None:
+    _require_matplotlib()
     ensure_dir(output_path.parent)
     labels = metric_keys
     baseline_vals = [baseline.get(key, 0.0) for key in labels]
@@ -433,6 +526,7 @@ def save_curve(
     ylabel: str,
     output_path: Path,
 ) -> None:
+    _require_matplotlib()
     ensure_dir(output_path.parent)
     plt.figure(figsize=(8, 5))
     plt.plot(range(1, len(ys) + 1), ys, marker="o", color="#C44E52")
@@ -497,6 +591,12 @@ def build_probe_readme(
     notes: list[str],
 ) -> None:
     top_tasks = dataset_stats["top_tasks"]
+    target_stats_by_rep = dataset_stats["target_token_stats_by_representation"]
+    action_repr_title = action_representation_title(
+        config["action_representation"],
+        round_digits=config["round_digits"],
+        action_bucket_count=config["action_bucket_count"],
+    )
     readme = f"""# CALVIN Joint Infill 数据探查报告
 
 - 实验日期：`{config["experiment_date"]}`
@@ -515,7 +615,8 @@ def build_probe_readme(
 - 原始数据只读：是
 - 本次扫描样本数：`{dataset_stats["sample_count"]}`
 - text 区域：`think`
-- action 区域：`actions` 四舍五入到 `{config["round_digits"]}` 位后序列化
+- action 区域：`actions`
+- 默认 action 表示：`{action_repr_title}`
 - 动作序列格式：`[a1,...,a7]; [a1,...,a7]; ...`
 - 本次是否做截断：`{config["token_filter_desc"]}`
 
@@ -533,7 +634,7 @@ cd /data/ytw/VLA_baseline/dllm
 ## 5. 指标定义
 - `think_char_stats`：`think` 字符长度分布
 - `action_step_stats`：动作步数分布
-- `target_token_stats`：联合样本字符串的 token 长度分布
+- `target_token_stats_by_representation`：不同动作表示下的联合样本 token 长度分布
 - `mask_validation_pass_rate`：marker 能成功切出 text/action 区域的比例
 
 ## 6. 结果总表
@@ -542,7 +643,15 @@ cd /data/ytw/VLA_baseline/dllm
 - mask 验证通过率：`{dataset_stats["mask_validation_pass_rate"]:.4f}`
 - think 长度统计：`{json.dumps(dataset_stats["think_char_stats"], ensure_ascii=False)}`
 - action 步数统计：`{json.dumps(dataset_stats["action_step_stats"], ensure_ascii=False)}`
-- target token 长度统计：`{json.dumps(dataset_stats["target_token_stats"], ensure_ascii=False)}`
+
+### 不同动作表示的 target token 长度统计
+
+| representation | min | p50 | p90 | p95 | max | mean |
+|---|---:|---:|---:|---:|---:|---:|
+""" + "\n".join(
+        f"| {representation} | {stats.get('min', 0.0):.1f} | {stats.get('p50', 0.0):.1f} | {stats.get('p90', 0.0):.1f} | {stats.get('p95', 0.0):.1f} | {stats.get('max', 0.0):.1f} | {stats.get('mean', 0.0):.1f} |"
+        for representation, stats in target_stats_by_rep.items()
+    ) + f"""
 
 Top-10 任务分布：
 
@@ -623,7 +732,7 @@ def build_sample_readme(
             "- 原始数据只读：是",
             f"- 评估样本数：`{config['sample_count']}`",
             "- text 区域：`think`",
-            f"- action 区域：四舍五入到 `{config['round_digits']}` 位后的原始动作串",
+            f"- action 表示：`{action_representation_title(config['action_representation'], round_digits=config['round_digits'], action_bucket_count=config['action_bucket_count'])}`",
             f"- token 长度过滤：`{config['token_filter_desc']}`",
             f"- split 说明：`{config['split_desc']}`",
             f"- split 清单：`{config['split_manifest_path']}`",
@@ -756,7 +865,7 @@ def build_fit_readme(
         f"- 训练样本数：`{config['train_size']}`",
         f"- test 样本数：`{config['holdout_size']}`",
         "- text 区域：`think`",
-        f"- action 区域：四舍五入到 `{config['round_digits']}` 位后的原始动作串",
+        f"- action 表示：`{action_representation_title(config['action_representation'], round_digits=config['round_digits'], action_bucket_count=config['action_bucket_count'])}`",
         f"- token 长度过滤：`{config['token_filter_desc']}`",
         f"- split 说明：`{config['split_desc']}`",
         f"- split 清单：`{config['split_manifest_path']}`",
@@ -866,6 +975,7 @@ def save_case_table_plot(
     output_path: Path,
     title: str,
 ) -> None:
+    _require_matplotlib()
     ensure_dir(output_path.parent)
     if not rows:
         return
@@ -895,17 +1005,37 @@ def token_length_stats(
     tokenizer,
     examples: list[CalvinJointInfillExample],
     *,
+    action_representation: str,
     round_digits: int,
-) -> tuple[dict[str, float], list[int], float]:
-    lengths: list[int] = []
+    action_bucket_count: int,
+    action_representations: tuple[str, ...] = ACTION_REPRESENTATIONS,
+) -> tuple[dict[str, dict[str, float]], list[int], float]:
+    stats_by_representation: dict[str, dict[str, float]] = {}
+    selected_lengths: list[int] = []
+    for representation in action_representations:
+        lengths: list[int] = []
+        for example in examples:
+            _, target_ids, _ = build_case(
+                tokenizer=tokenizer,
+                example=example,
+                action_representation=representation,
+                round_digits=round_digits,
+                action_bucket_count=action_bucket_count,
+            )
+            lengths.append(len(target_ids))
+        stats_by_representation[representation] = summarize_lengths(lengths)
+        if representation == action_representation:
+            selected_lengths = lengths
+
     pass_count = 0
     for example in examples:
         _, target_ids, _ = build_case(
             tokenizer=tokenizer,
             example=example,
+            action_representation=action_representation,
             round_digits=round_digits,
+            action_bucket_count=action_bucket_count,
         )
-        lengths.append(len(target_ids))
         try:
             build_text_action_region_masks(
                 tokenizer,
@@ -919,14 +1049,16 @@ def token_length_stats(
         except Exception:
             pass
     pass_rate = pass_count / max(len(examples), 1)
-    return summarize_lengths(lengths), lengths, pass_rate
+    return stats_by_representation, selected_lengths, pass_rate
 
 
 def filter_by_token_length(
     tokenizer,
     examples: list[CalvinJointInfillExample],
     *,
+    action_representation: str,
     round_digits: int,
+    action_bucket_count: int,
     max_target_tokens: int | None,
 ) -> tuple[list[CalvinJointInfillExample], dict[str, int]]:
     if max_target_tokens is None:
@@ -937,7 +1069,9 @@ def filter_by_token_length(
         _, target_ids, _ = build_case(
             tokenizer=tokenizer,
             example=example,
+            action_representation=action_representation,
             round_digits=round_digits,
+            action_bucket_count=action_bucket_count,
         )
         if len(target_ids) <= max_target_tokens:
             kept.append(example)

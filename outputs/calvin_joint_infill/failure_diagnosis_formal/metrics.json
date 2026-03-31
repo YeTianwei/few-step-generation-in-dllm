@@ -1,0 +1,2029 @@
+{
+  "headline": "协调模块对 text 有轻微帮助，但 action 侧没有同步改善，joint 指标几乎没变。",
+  "experiments": [
+    {
+      "name": "baseline_eval_formal",
+      "path": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/baseline_eval_formal",
+      "case_count": 200,
+      "has_pair": false,
+      "role": "baseline_only"
+    },
+    {
+      "name": "coord_train_eval_formal",
+      "path": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/coord_train_eval_formal",
+      "case_count": 200,
+      "has_pair": true,
+      "role": "paired"
+    },
+    {
+      "name": "fit_smoke",
+      "path": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/fit_smoke",
+      "case_count": 1,
+      "has_pair": true,
+      "role": "smoke"
+    },
+    {
+      "name": "probe_initial",
+      "path": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/probe_initial",
+      "case_count": 10,
+      "has_pair": false,
+      "role": "probe"
+    },
+    {
+      "name": "sample_smoke",
+      "path": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/sample_smoke",
+      "case_count": 1,
+      "has_pair": true,
+      "role": "smoke"
+    }
+  ],
+  "paired_experiment_count": 3,
+  "total_case_count": 402,
+  "paired_case_count": 202,
+  "same_prediction_rate": 0.5841584158415841,
+  "label_counts": {
+    "repetition_collapse": 201,
+    "punctuation_collapse": 147,
+    "no_change": 141,
+    "text_only_gain": 47,
+    "action_failure": 53
+  },
+  "label_rates": {
+    "repetition_collapse": 0.995049504950495,
+    "punctuation_collapse": 0.7277227722772277,
+    "no_change": 0.698019801980198,
+    "text_only_gain": 0.23267326732673269,
+    "action_failure": 0.2623762376237624
+  },
+  "bucket_edges": [
+    1932.0,
+    2526.0,
+    3473.0,
+    3500.0,
+    3528.0,
+    3611.0
+  ],
+  "length_buckets": {
+    "[1932, 2526)": {
+      "count": 80,
+      "length_min": 1932.0,
+      "length_max": 2523.0,
+      "baseline_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.004672828419713474,
+        "action_region_tokens": 1926.35,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.013781106992484558,
+        "joint_region_tokens": 2208.525,
+        "latency_sec": 1.770572617626749,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.07663115394153767,
+        "text_region_tokens": 282.175
+      },
+      "coordinated_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.0026608064006737554,
+        "action_region_tokens": 1926.35,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.012459199857641275,
+        "joint_region_tokens": 2208.525,
+        "latency_sec": 1.7542125747306272,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.08010436649191426,
+        "text_region_tokens": 282.175
+      },
+      "baseline_signals": {
+        "adjacent_repeat_ratio": 0.7369808825916981,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 755.5875,
+        "punctuation_ratio": 0.1419367697717609,
+        "token_count": 1120.8125,
+        "top_token_share": 0.7533778881504903,
+        "unique_ratio": 0.18280979694464453
+      },
+      "coordinated_signals": {
+        "adjacent_repeat_ratio": 0.5709522290198834,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 17.15,
+        "punctuation_ratio": 0.1865486640505424,
+        "token_count": 36.7,
+        "top_token_share": 0.5663791200074991,
+        "unique_ratio": 0.3349605290006418
+      }
+    },
+    "[2526, 3473)": {
+      "count": 80,
+      "length_min": 2526.0,
+      "length_max": 3472.0,
+      "baseline_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.036340673325387846,
+        "action_region_tokens": 2918.75,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.037464378519849226,
+        "joint_region_tokens": 3181.15,
+        "latency_sec": 2.9176922182319687,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.04295048266981642,
+        "text_region_tokens": 262.4
+      },
+      "coordinated_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.03637688979511127,
+        "action_region_tokens": 2918.75,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.038836398758074306,
+        "joint_region_tokens": 3181.15,
+        "latency_sec": 2.875837209681049,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.05510804299125477,
+        "text_region_tokens": 262.4
+      },
+      "baseline_signals": {
+        "adjacent_repeat_ratio": 0.8491308958177292,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 1350.1625,
+        "punctuation_ratio": 0.6347125690481786,
+        "token_count": 1580.875,
+        "top_token_share": 0.8502153950523433,
+        "unique_ratio": 0.10765137756123978
+      },
+      "coordinated_signals": {
+        "adjacent_repeat_ratio": 0.7241392218010013,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 50.1,
+        "punctuation_ratio": 0.5811049811713475,
+        "token_count": 69.95,
+        "top_token_share": 0.7167080745880898,
+        "unique_ratio": 0.21841684435869305
+      }
+    },
+    "[3473, 3500)": {
+      "count": 78,
+      "length_min": 3473.0,
+      "length_max": 3499.0,
+      "baseline_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.06144386180981323,
+        "action_region_tokens": 3202.4358974358975,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.059534401946937265,
+        "joint_region_tokens": 3489.0,
+        "latency_sec": 3.2309151608496904,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.03810658681564777,
+        "text_region_tokens": 286.56410256410254
+      },
+      "coordinated_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.061483900887953497,
+        "action_region_tokens": 3202.4358974358975,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.059718041775350034,
+        "joint_region_tokens": 3489.0,
+        "latency_sec": 3.189128523095487,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.039889914034955135,
+        "text_region_tokens": 286.56410256410254
+      },
+      "baseline_signals": {
+        "adjacent_repeat_ratio": 0.8979820079520706,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 1572.7564102564102,
+        "punctuation_ratio": 0.913709226279713,
+        "token_count": 1798.8461538461538,
+        "top_token_share": 0.8922439307421168,
+        "unique_ratio": 0.08064171876914637
+      },
+      "coordinated_signals": {
+        "adjacent_repeat_ratio": 0.7939597627189181,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 64.1025641025641,
+        "punctuation_ratio": 0.8065858547751876,
+        "token_count": 86.64102564102564,
+        "top_token_share": 0.7828129922512547,
+        "unique_ratio": 0.16361270819103313
+      }
+    },
+    "[3500, 3528)": {
+      "count": 83,
+      "length_min": 3500.0,
+      "length_max": 3527.0,
+      "baseline_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.0573627032702265,
+        "action_region_tokens": 3202.385542168675,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.05562811083460274,
+        "joint_region_tokens": 3513.4819277108436,
+        "latency_sec": 3.242148451293897,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.03769279055551211,
+        "text_region_tokens": 311.09638554216866
+      },
+      "coordinated_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.05733788479415773,
+        "action_region_tokens": 3202.3809523809523,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.05572354570263562,
+        "joint_region_tokens": 3513.3333333333335,
+        "latency_sec": 3.204998874482477,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.038997145307817505,
+        "text_region_tokens": 310.95238095238096
+      },
+      "baseline_signals": {
+        "adjacent_repeat_ratio": 0.8668414232577948,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 1577.9638554216867,
+        "punctuation_ratio": 0.8712270228055725,
+        "token_count": 1765.7710843373493,
+        "top_token_share": 0.858566983470113,
+        "unique_ratio": 0.08707784644801322
+      },
+      "coordinated_signals": {
+        "adjacent_repeat_ratio": 0.7401856412113084,
+        "digit_ratio": 0.0002736726874657909,
+        "max_repeat_run": 57.095238095238095,
+        "punctuation_ratio": 0.7474470760992727,
+        "token_count": 80.88095238095238,
+        "top_token_share": 0.7233503926208517,
+        "unique_ratio": 0.18823360604499517
+      }
+    },
+    "[3528, 3611]": {
+      "count": 81,
+      "length_min": 3528.0,
+      "length_max": 3611.0,
+      "baseline_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.06040715539247424,
+        "action_region_tokens": 3202.5308641975307,
+        "effective_steps": 8.0,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.05815618381577075,
+        "joint_region_tokens": 3547.6666666666665,
+        "latency_sec": 3.2439262873757584,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.03730431198464841,
+        "text_region_tokens": 345.1358024691358
+      },
+      "coordinated_metrics": {
+        "action_region_exact": 0.0,
+        "action_region_token_acc": 0.06066040836902026,
+        "action_region_tokens": 3202.5365853658536,
+        "effective_steps": 7.829268292682927,
+        "joint_region_exact": 0.0,
+        "joint_region_token_acc": 0.05846417693895069,
+        "joint_region_tokens": 3547.682926829268,
+        "latency_sec": 3.179082848790397,
+        "text_region_exact": 0.0,
+        "text_region_token_acc": 0.03813031293294004,
+        "text_region_tokens": 345.1463414634146
+      },
+      "baseline_signals": {
+        "adjacent_repeat_ratio": 0.8987848874434069,
+        "digit_ratio": 5.533077428502265e-05,
+        "max_repeat_run": 1623.20987654321,
+        "punctuation_ratio": 0.9125647184977262,
+        "token_count": 1849.283950617284,
+        "top_token_share": 0.889326052712012,
+        "unique_ratio": 0.07884623859686424
+      },
+      "coordinated_signals": {
+        "adjacent_repeat_ratio": 0.7748251465920448,
+        "digit_ratio": 0.0,
+        "max_repeat_run": 138.3170731707317,
+        "punctuation_ratio": 0.7893637964201732,
+        "token_count": 170.0731707317073,
+        "top_token_share": 0.759583258326052,
+        "unique_ratio": 0.1666893410728262
+      }
+    }
+  },
+  "paired_signal_means": {
+    "baseline": {
+      "adjacent_repeat_ratio": 0.7176085120218066,
+      "digit_ratio": 0.0,
+      "max_repeat_run": 68.16831683168317,
+      "punctuation_ratio": 0.6496936903316028,
+      "token_count": 90.91089108910892,
+      "top_token_share": 0.7121815659770068,
+      "unique_ratio": 0.2078888542625226
+    },
+    "coordinated": {
+      "adjacent_repeat_ratio": 0.7209094887129801,
+      "digit_ratio": 5.6902241948332766e-05,
+      "max_repeat_run": 65.63861386138613,
+      "punctuation_ratio": 0.6233647871015073,
+      "token_count": 89.18316831683168,
+      "top_token_share": 0.7097862602131999,
+      "unique_ratio": 0.21413893560247207
+    }
+  },
+  "task_rankings": {
+    "top_improved": [
+      {
+        "task_name": "lift_pink_block_drawer",
+        "count": 3,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.04193984805911125,
+          "action_region_tokens": 2919.6666666666665,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04253752220183873,
+          "joint_region_tokens": 3227.6666666666665,
+          "latency_sec": 2.8293580251435437,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04314223406343062,
+          "text_region_tokens": 308.0
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.04193984805911125,
+          "action_region_tokens": 2919.6666666666665,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04432883023084909,
+          "joint_region_tokens": 3227.6666666666665,
+          "latency_sec": 2.920934194388489,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.059598594839000034,
+          "text_region_tokens": 308.0
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.001791308029010362,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09157616924494505,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.01645636077556941,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "place_in_slider",
+        "count": 13,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.010110713513773144,
+          "action_region_tokens": 2164.3076923076924,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.017722755996659238,
+          "joint_region_tokens": 2445.076923076923,
+          "latency_sec": 1.965163549193396,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.06821514210838879,
+          "text_region_tokens": 280.7692307692308
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.010110713513773144,
+          "action_region_tokens": 2164.3076923076924,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.019446689240169443,
+          "joint_region_tokens": 2445.076923076923,
+          "latency_sec": 2.0381669771785917,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.08368981508738328,
+          "text_region_tokens": 280.7692307692308
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0017239332435102055,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.07300342798519566,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.015474672978994491,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "lift_red_block_drawer",
+        "count": 4,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.02951280449718926,
+          "action_region_tokens": 2689.75,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.03307886999092856,
+          "joint_region_tokens": 3009.75,
+          "latency_sec": 2.619425611337647,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.057753071939122956,
+          "text_region_tokens": 320.0
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.02951280449718926,
+          "action_region_tokens": 2689.75,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.034583194925114344,
+          "joint_region_tokens": 3009.75,
+          "latency_sec": 2.7066572215408087,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.07078238790003501,
+          "text_region_tokens": 320.0
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0015043249341857856,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.08723161020316184,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.013029315960912051,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "turn_off_lightbulb",
+        "count": 10,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.04921348524952111,
+          "action_region_tokens": 3067.3,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04888100820543263,
+          "joint_region_tokens": 3365.1,
+          "latency_sec": 2.9494987934827805,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.041617415882593066,
+          "text_region_tokens": 297.8
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.04955696203765871,
+          "action_region_tokens": 3067.3,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.050266350104802716,
+          "joint_region_tokens": 3365.1,
+          "latency_sec": 3.0456697232089938,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.05380319684418923,
+          "text_region_tokens": 297.8
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.00034347678813759913,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0013853418993700836,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09617092972621322,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.012185780961596164,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "unstack_block",
+        "count": 7,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0379791063810661,
+          "action_region_tokens": 2695.4285714285716,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0399352619864582,
+          "joint_region_tokens": 3001.8571428571427,
+          "latency_sec": 2.5721700147592594,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04828442614607967,
+          "text_region_tokens": 306.42857142857144
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.03782483300865018,
+          "action_region_tokens": 2695.4285714285716,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04108886267062173,
+          "joint_region_tokens": 3001.8571428571427,
+          "latency_sec": 2.658765113912523,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.05796930228883242,
+          "text_region_tokens": 306.42857142857144
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": -0.00015427337241592093,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.001153600684163529,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.08659509915326336,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.009684876142752749,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "place_in_drawer",
+        "count": 8,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.010969706433479075,
+          "action_region_tokens": 2396.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.01801045097821051,
+          "joint_region_tokens": 2675.375,
+          "latency_sec": 2.2164506558328867,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.07151599865655324,
+          "text_region_tokens": 279.375
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.010969706433479075,
+          "action_region_tokens": 2396.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.01895802427387706,
+          "joint_region_tokens": 2675.375,
+          "latency_sec": 2.2945522223599255,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0804107236990399,
+          "text_region_tokens": 279.375
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0009475732956665504,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.07810156652703881,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.00889472504248666,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "turn_on_led",
+        "count": 9,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.03013225825833724,
+          "action_region_tokens": 2474.777777777778,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.03333256531706147,
+          "joint_region_tokens": 2751.5555555555557,
+          "latency_sec": 2.295468471840852,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.05316529918050871,
+          "text_region_tokens": 276.77777777777777
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.03026282360629389,
+          "action_region_tokens": 2474.777777777778,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.03362825630330696,
+          "joint_region_tokens": 2751.5555555555557,
+          "latency_sec": 2.3752402611490755,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.05474047618440926,
+          "text_region_tokens": 276.77777777777777
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.00013056534795665223,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0002956909862454893,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.0797717893082237,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0015751770039005505,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "lift_pink_block_table",
+        "count": 4,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.045826513752039534,
+          "action_region_tokens": 2952.5,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04585075604022728,
+          "joint_region_tokens": 3275.0,
+          "latency_sec": 2.8129971225280315,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04345008643439895,
+          "text_region_tokens": 322.5
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.045826513752039534,
+          "action_region_tokens": 2952.5,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04613276393644837,
+          "joint_region_tokens": 3275.0,
+          "latency_sec": 2.906052350997925,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.046365538329442686,
+          "text_region_tokens": 322.5
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0002820078962210912,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09305522846989334,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.002915451895043733,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "lift_pink_block_slider",
+        "count": 7,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.057047464954402605,
+          "action_region_tokens": 3067.1428571428573,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.055817763926153306,
+          "joint_region_tokens": 3381.285714285714,
+          "latency_sec": 2.9911287099655186,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04143687205242338,
+          "text_region_tokens": 314.14285714285717
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.057047464954402605,
+          "action_region_tokens": 3067.1428571428573,
+          "effective_steps": 7.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.056077105691874116,
+          "joint_region_tokens": 3381.285714285714,
+          "latency_sec": 2.648661853080349,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0441991605254136,
+          "text_region_tokens": 314.14285714285717
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": -1.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0002593417657208094,
+          "joint_region_tokens": 0.0,
+          "latency_sec": -0.3424668568851694,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.002762288472990225,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "push_pink_block_right",
+        "count": 2,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.024508273493599752,
+          "action_region_tokens": 2628.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.028689695515605726,
+          "joint_region_tokens": 2933.0,
+          "latency_sec": 2.461194392759353,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.05653915740501421,
+          "text_region_tokens": 305.0
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.024508273493599752,
+          "action_region_tokens": 2628.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.028902915131810418,
+          "joint_region_tokens": 2933.0,
+          "latency_sec": 2.544737140648067,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.058251486172137504,
+          "text_region_tokens": 305.0
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.00021321961620469204,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.08354274788871408,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0017123287671232945,
+          "text_region_tokens": 0.0
+        }
+      }
+    ],
+    "top_regressed": [
+      {
+        "task_name": "turn_on_lightbulb",
+        "count": 6,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.04111876774367805,
+          "action_region_tokens": 2810.5,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.041230610725773886,
+          "joint_region_tokens": 3083.1666666666665,
+          "latency_sec": 2.689636168691019,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0439276998601182,
+          "text_region_tokens": 272.6666666666667
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.032840821920996015,
+          "action_region_tokens": 2810.5,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.03568806888950337,
+          "joint_region_tokens": 3083.1666666666665,
+          "latency_sec": 2.777953775289158,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.059426109622876526,
+          "text_region_tokens": 272.6666666666667
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": -0.008277945822682035,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": -0.005542541836270516,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.08831760659813881,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.015498409762758326,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "stack_block",
+        "count": 9,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.020582935397098906,
+          "action_region_tokens": 2435.5555555555557,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0258523910001579,
+          "joint_region_tokens": 2737.4444444444443,
+          "latency_sec": 2.252459780726996,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.06019076411336695,
+          "text_region_tokens": 301.8888888888889
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.018009577347491153,
+          "action_region_tokens": 2435.5555555555557,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.02377480063592384,
+          "joint_region_tokens": 2737.4444444444443,
+          "latency_sec": 2.332875970233646,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.06134771641715228,
+          "text_region_tokens": 301.8888888888889
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": -0.0025733580496077532,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": -0.0020775903642340603,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.08041618950664997,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.001156952303785333,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "move_slider_left",
+        "count": 13,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.05997437559472163,
+          "action_region_tokens": 3117.6153846153848,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.05856134025060562,
+          "joint_region_tokens": 3423.5384615384614,
+          "latency_sec": 3.010886874766304,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04200568147630696,
+          "text_region_tokens": 305.9230769230769
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.05979148668144755,
+          "action_region_tokens": 3117.6153846153848,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.05838851295586366,
+          "joint_region_tokens": 3423.5384615384614,
+          "latency_sec": 3.107612635080631,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04197725316955573,
+          "text_region_tokens": 305.9230769230769
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": -0.00018288891327408047,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": -0.0001728272947419604,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09672576031432678,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": -2.8428306751232535e-05,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "move_slider_right",
+        "count": 12,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.05108255118685535,
+          "action_region_tokens": 3119.5833333333335,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.05031875283004986,
+          "joint_region_tokens": 3412.3333333333335,
+          "latency_sec": 3.009471632152175,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.039766549229265494,
+          "text_region_tokens": 292.75
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.050969069570877136,
+          "action_region_tokens": 3119.5833333333335,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0501933728214106,
+          "joint_region_tokens": 3412.3333333333335,
+          "latency_sec": 3.107255306948597,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.03946351892623519,
+          "text_region_tokens": 292.75
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": -0.00011348161597821149,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": -0.0001253800086392573,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09778367479642203,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": -0.000303030303030305,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "rotate_blue_block_left",
+        "count": 4,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0485633978763273,
+          "action_region_tokens": 2864.75,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04910387169950113,
+          "joint_region_tokens": 3152.5,
+          "latency_sec": 2.7304059732705355,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04435046296872115,
+          "text_region_tokens": 287.75
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0485633978763273,
+          "action_region_tokens": 2864.75,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.04910387169950113,
+          "joint_region_tokens": 3152.5,
+          "latency_sec": 2.815092901000753,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04435046296872115,
+          "text_region_tokens": 287.75
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.08468692773021758,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "rotate_red_block_left",
+        "count": 3,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0628643677990568,
+          "action_region_tokens": 3202.6666666666665,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.060434685376103664,
+          "joint_region_tokens": 3546.3333333333335,
+          "latency_sec": 3.1852212961142263,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.03786320943195372,
+          "text_region_tokens": 343.6666666666667
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0628643677990568,
+          "action_region_tokens": 3202.6666666666665,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.060434685376103664,
+          "joint_region_tokens": 3546.3333333333335,
+          "latency_sec": 3.2860405299191675,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.03786320943195372,
+          "text_region_tokens": 343.6666666666667
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.10081923380494118,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "rotate_pink_block_left",
+        "count": 4,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.06392444583203247,
+          "action_region_tokens": 3203.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.061617948898128105,
+          "joint_region_tokens": 3505.75,
+          "latency_sec": 3.108917139004916,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.03738462652138018,
+          "text_region_tokens": 302.75
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.06392444583203247,
+          "action_region_tokens": 3203.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.061617948898128105,
+          "joint_region_tokens": 3505.75,
+          "latency_sec": 3.208459932124242,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.03738462652138018,
+          "text_region_tokens": 302.75
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09954279311932623,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "lift_red_block_slider",
+        "count": 7,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.05451384152020638,
+          "action_region_tokens": 3009.5714285714284,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.054810762380819174,
+          "joint_region_tokens": 3329.1428571428573,
+          "latency_sec": 2.899336355871388,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04644351401479062,
+          "text_region_tokens": 319.57142857142856
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.05451384152020638,
+          "action_region_tokens": 3009.5714285714284,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.054810762380819174,
+          "joint_region_tokens": 3329.1428571428573,
+          "latency_sec": 2.99432116693684,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.04644351401479062,
+          "text_region_tokens": 319.57142857142856
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09498481106545231,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "push_pink_block_left",
+        "count": 1,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.06433479075577764,
+          "action_region_tokens": 3202.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.06265948398072016,
+          "joint_region_tokens": 3527.0,
+          "latency_sec": 3.1176184974610806,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.046153846153846156,
+          "text_region_tokens": 325.0
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.06433479075577764,
+          "action_region_tokens": 3202.0,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.06265948398072016,
+          "joint_region_tokens": 3527.0,
+          "latency_sec": 3.220296206884086,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.046153846153846156,
+          "text_region_tokens": 325.0
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.10267770942300558,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0,
+          "text_region_tokens": 0.0
+        }
+      },
+      {
+        "task_name": "push_into_drawer",
+        "count": 6,
+        "baseline": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.057822167810744264,
+          "action_region_tokens": 3202.3333333333335,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.055913126183558495,
+          "joint_region_tokens": 3515.0,
+          "latency_sec": 3.1325286529026926,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.03613675756865447,
+          "text_region_tokens": 312.6666666666667
+        },
+        "coordinated": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.057822167810744264,
+          "action_region_tokens": 3202.3333333333335,
+          "effective_steps": 8.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.055913126183558495,
+          "joint_region_tokens": 3515.0,
+          "latency_sec": 3.230254436066995,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.03613675756865447,
+          "text_region_tokens": 312.6666666666667
+        },
+        "delta": {
+          "action_region_exact": 0.0,
+          "action_region_token_acc": 0.0,
+          "action_region_tokens": 0.0,
+          "effective_steps": 0.0,
+          "joint_region_exact": 0.0,
+          "joint_region_token_acc": 0.0,
+          "joint_region_tokens": 0.0,
+          "latency_sec": 0.09772578316430236,
+          "text_region_exact": 0.0,
+          "text_region_token_acc": 0.0,
+          "text_region_tokens": 0.0
+        }
+      }
+    ]
+  },
+  "highlight_cases": [
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "place_in_slider_0840783_0840828",
+      "task_name": "place_in_slider",
+      "length_bucket": "[2526, 3473)",
+      "length": 2526.0,
+      "baseline_joint": 0.0027711797307996833,
+      "coord_joint": 0.010688836104513063,
+      "delta_joint": 0.00791765637371338,
+      "baseline_text": "Instruction: put the object in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the ...",
+      "coord_text": "Instruction: put the object in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the ...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.02564102564102564,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.0027711797307996833,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 273.0,
+        "action_region_tokens": 2253.0,
+        "joint_region_tokens": 2526.0,
+        "effective_steps": 8.0,
+        "latency_sec": 1.906019470654428
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.0989010989010989,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.010688836104513063,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 273.0,
+        "action_region_tokens": 2253.0,
+        "joint_region_tokens": 2526.0,
+        "effective_steps": 8.0,
+        "latency_sec": 1.9794767163693905
+      },
+      "baseline_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "coordinated_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: put the object in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the ..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "turn_on_lightbulb_1646415_1646462",
+      "task_name": "turn_on_lightbulb",
+      "length_bucket": "[2526, 3473)",
+      "length": 2657.0,
+      "baseline_joint": 0.002258185923974407,
+      "coord_joint": 0.010161836657884832,
+      "delta_joint": 0.007903650733910425,
+      "baseline_text": "Instruction: move up the switch Assistant response: the the the the the the the the the the the the the the the the the the the the the the the the...",
+      "coord_text": "Instruction: move up the switch Assistant response:, the the the, the the the the the the the the the the the the the the the the the the the the t...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.01639344262295082,
+        "action_region_token_acc": 0.00042517006802721087,
+        "joint_region_token_acc": 0.002258185923974407,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 305.0,
+        "action_region_tokens": 2352.0,
+        "joint_region_tokens": 2657.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.257445286028087
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.08852459016393442,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.010161836657884832,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 305.0,
+        "action_region_tokens": 2352.0,
+        "joint_region_tokens": 2657.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.3345996513962746
+      },
+      "baseline_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.25,
+        "adjacent_repeat_ratio": 0.7142857142857143,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6944444444444444,
+        "max_repeat_run": 24.0
+      },
+      "coordinated_signals": {
+        "token_count": 38.0,
+        "unique_ratio": 0.2894736842105263,
+        "adjacent_repeat_ratio": 0.6216216216216216,
+        "punctuation_ratio": 0.18421052631578946,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.631578947368421,
+        "max_repeat_run": 20.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 38.0,
+        "unique_ratio": 0.2894736842105263,
+        "adjacent_repeat_ratio": 0.6216216216216216,
+        "punctuation_ratio": 0.18421052631578946,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.631578947368421,
+        "max_repeat_run": 20.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: move up the switch Assistant response:, the the the, the the the the the the the the the the the the the the the the the the the the t..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "place_in_slider_1103985_1104033",
+      "task_name": "place_in_slider",
+      "length_bucket": "[2526, 3473)",
+      "length": 2759.0,
+      "baseline_joint": 0.0061616527727437476,
+      "coord_joint": 0.013773106197897789,
+      "delta_joint": 0.007611453425154041,
+      "baseline_text": "Instruction: put the block in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the t...",
+      "coord_text": "Instruction: put the block in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the t...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.047752808988764044,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.0061616527727437476,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 356.0,
+        "action_region_tokens": 2403.0,
+        "joint_region_tokens": 2759.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.3305680230259895
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.10674157303370786,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.013773106197897789,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 356.0,
+        "action_region_tokens": 2403.0,
+        "joint_region_tokens": 2759.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.4139679055660963
+      },
+      "baseline_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.3055555555555556,
+        "adjacent_repeat_ratio": 0.6285714285714286,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6388888888888888,
+        "max_repeat_run": 21.0
+      },
+      "coordinated_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.3055555555555556,
+        "adjacent_repeat_ratio": 0.6285714285714286,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6388888888888888,
+        "max_repeat_run": 21.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.3055555555555556,
+        "adjacent_repeat_ratio": 0.6285714285714286,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6388888888888888,
+        "max_repeat_run": 21.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: put the block in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the t..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "unstack_block_0501228_0501267",
+      "task_name": "unstack_block",
+      "length_bucket": "[1932, 2526)",
+      "length": 2263.0,
+      "baseline_joint": 0.0057445868316394165,
+      "coord_joint": 0.012814847547503314,
+      "delta_joint": 0.007070260715863898,
+      "baseline_text": "Instruction: unstack the blocks Assistant response: the the the the the the the the the the the the the the the the the the the the the the the the...",
+      "coord_text": "Instruction: unstack the blocks Assistant response:,, the the the, the the the the the the the,,, the the the the the the the the the the the the t...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.041935483870967745,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.0057445868316394165,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 310.0,
+        "action_region_tokens": 1953.0,
+        "joint_region_tokens": 2263.0,
+        "effective_steps": 8.0,
+        "latency_sec": 1.7216634545475245
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.0935483870967742,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.012814847547503314,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 310.0,
+        "action_region_tokens": 1953.0,
+        "joint_region_tokens": 2263.0,
+        "effective_steps": 8.0,
+        "latency_sec": 1.7916041389107704
+      },
+      "baseline_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.22857142857142856,
+        "adjacent_repeat_ratio": 0.7352941176470589,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.7142857142857143,
+        "max_repeat_run": 24.0
+      },
+      "coordinated_signals": {
+        "token_count": 40.0,
+        "unique_ratio": 0.25,
+        "adjacent_repeat_ratio": 0.6153846153846154,
+        "punctuation_ratio": 0.275,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.575,
+        "max_repeat_run": 12.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 40.0,
+        "unique_ratio": 0.25,
+        "adjacent_repeat_ratio": 0.6153846153846154,
+        "punctuation_ratio": 0.275,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.575,
+        "max_repeat_run": 12.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "punctuation_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "punctuation_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 0,
+      "preview": "Instruction: unstack the blocks Assistant response:,, the the the, the the the the the the the,,, the the the the the the the the the the the the t..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "lift_red_block_drawer_1684982_1685029",
+      "task_name": "lift_red_block_drawer",
+      "length_bucket": "[2526, 3473)",
+      "length": 2659.0,
+      "baseline_joint": 0.0052651372696502444,
+      "coord_joint": 0.011282437006393382,
+      "delta_joint": 0.006017299736743137,
+      "baseline_text": "Instruction: lift the red block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the t...",
+      "coord_text": "Instruction: lift the red block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the t...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.04560260586319218,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.0052651372696502444,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 307.0,
+        "action_region_tokens": 2352.0,
+        "joint_region_tokens": 2659.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.2586307702586055
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.09771986970684039,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.011282437006393382,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 307.0,
+        "action_region_tokens": 2352.0,
+        "joint_region_tokens": 2659.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.336928142234683
+      },
+      "baseline_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.3333333333333333,
+        "adjacent_repeat_ratio": 0.6,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6111111111111112,
+        "max_repeat_run": 20.0
+      },
+      "coordinated_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.3333333333333333,
+        "adjacent_repeat_ratio": 0.6,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6111111111111112,
+        "max_repeat_run": 20.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.3333333333333333,
+        "adjacent_repeat_ratio": 0.6,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6111111111111112,
+        "max_repeat_run": 20.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: lift the red block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the t..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "place_in_slider_0923613_0923661",
+      "task_name": "place_in_slider",
+      "length_bucket": "[2526, 3473)",
+      "length": 2662.0,
+      "baseline_joint": 0.003756574004507889,
+      "coord_joint": 0.009015777610818933,
+      "delta_joint": 0.0052592036063110435,
+      "baseline_text": "Instruction: put the object in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the ...",
+      "coord_text": "Instruction: put the object in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the ...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.038461538461538464,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.003756574004507889,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 260.0,
+        "action_region_tokens": 2402.0,
+        "joint_region_tokens": 2662.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.258233556523919
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.09230769230769231,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.009015777610818933,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 260.0,
+        "action_region_tokens": 2402.0,
+        "joint_region_tokens": 2662.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.3380073932930827
+      },
+      "baseline_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "coordinated_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: put the object in the cabinet Assistant response: the the the the the the the the the the the the the the the the the the the the the ..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "lift_pink_block_drawer_0150333_0150380",
+      "task_name": "lift_pink_block_drawer",
+      "length_bucket": "[2526, 3473)",
+      "length": 2654.0,
+      "baseline_joint": 0.00640542577241899,
+      "coord_joint": 0.01092690278824416,
+      "delta_joint": 0.00452147701582517,
+      "baseline_text": "Instruction: lift the pink block in the drawer Assistant response: the\\\"\\\" the\\\"\\\" the the the the\\\" the the the the the\\\" the the the the\\\" the th...",
+      "coord_text": "Instruction: lift the pink block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the ...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.05647840531561462,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.00640542577241899,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 301.0,
+        "action_region_tokens": 2353.0,
+        "joint_region_tokens": 2654.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.2561947954818606
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.09634551495016612,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.01092690278824416,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 301.0,
+        "action_region_tokens": 2353.0,
+        "joint_region_tokens": 2654.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.3331792494282126
+      },
+      "baseline_signals": {
+        "token_count": 46.0,
+        "unique_ratio": 0.30434782608695654,
+        "adjacent_repeat_ratio": 0.26666666666666666,
+        "punctuation_ratio": 0.41304347826086957,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.391304347826087,
+        "max_repeat_run": 5.0
+      },
+      "coordinated_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.3142857142857143,
+        "adjacent_repeat_ratio": 0.6176470588235294,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6285714285714286,
+        "max_repeat_run": 20.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.3142857142857143,
+        "adjacent_repeat_ratio": 0.6176470588235294,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6285714285714286,
+        "max_repeat_run": 20.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "punctuation_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: lift the pink block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the ..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "turn_off_lightbulb_0035623_0035687",
+      "task_name": "turn_off_lightbulb",
+      "length_bucket": "[3500, 3528)",
+      "length": 3520.0,
+      "baseline_joint": 0.0022727272727272726,
+      "coord_joint": 0.00625,
+      "delta_joint": 0.003977272727272728,
+      "baseline_text": "Instruction: toggle the light switch to turn off the light bulb Assistant response: the the the the the the the the the the the the the the the the...",
+      "coord_text": "Instruction: toggle the light switch to turn off the light bulb Assistant response: the the the the the the the the the the the the the the the the...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.006289308176100629,
+        "action_region_token_acc": 0.0018738288569643974,
+        "joint_region_token_acc": 0.0022727272727272726,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 318.0,
+        "action_region_tokens": 3202.0,
+        "joint_region_tokens": 3520.0,
+        "effective_steps": 8.0,
+        "latency_sec": 3.1171517204493284
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.050314465408805034,
+        "action_region_token_acc": 0.0018738288569643974,
+        "joint_region_token_acc": 0.00625,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 318.0,
+        "action_region_tokens": 3202.0,
+        "joint_region_tokens": 3520.0,
+        "effective_steps": 8.0,
+        "latency_sec": 3.21688667871058
+      },
+      "baseline_signals": {
+        "token_count": 34.0,
+        "unique_ratio": 0.38235294117647056,
+        "adjacent_repeat_ratio": 0.5151515151515151,
+        "punctuation_ratio": 0.14705882352941177,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.5294117647058824,
+        "max_repeat_run": 16.0
+      },
+      "coordinated_signals": {
+        "token_count": 34.0,
+        "unique_ratio": 0.38235294117647056,
+        "adjacent_repeat_ratio": 0.5151515151515151,
+        "punctuation_ratio": 0.14705882352941177,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.5294117647058824,
+        "max_repeat_run": 16.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 34.0,
+        "unique_ratio": 0.38235294117647056,
+        "adjacent_repeat_ratio": 0.5151515151515151,
+        "punctuation_ratio": 0.14705882352941177,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.5294117647058824,
+        "max_repeat_run": 16.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 3,
+      "preview": "Instruction: toggle the light switch to turn off the light bulb Assistant response: the the the the the the the the the the the the the the the the..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "place_in_drawer_1705080_1705126",
+      "task_name": "place_in_drawer",
+      "length_bucket": "[2526, 3473)",
+      "length": 2561.0,
+      "baseline_joint": 0.005466614603670442,
+      "coord_joint": 0.008980866848887154,
+      "delta_joint": 0.003514252245216712,
+      "baseline_text": "Instruction: place the block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the the ...",
+      "coord_text": "Instruction: place the block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the the ...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.05405405405405406,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.005466614603670442,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 259.0,
+        "action_region_tokens": 2302.0,
+        "joint_region_tokens": 2561.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.2496988279744983
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.0888030888030888,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.008980866848887154,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 259.0,
+        "action_region_tokens": 2302.0,
+        "joint_region_tokens": 2561.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.321585296653211
+      },
+      "baseline_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "coordinated_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 35.0,
+        "unique_ratio": 0.2857142857142857,
+        "adjacent_repeat_ratio": 0.6470588235294118,
+        "punctuation_ratio": 0.14285714285714285,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6571428571428571,
+        "max_repeat_run": 21.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: place the block in the drawer Assistant response: the the the the the the the the the the the the the the the the the the the the the ..."
+    },
+    {
+      "experiment_name": "coord_train_eval_formal",
+      "sample_id": "turn_off_led_0064120_0064167",
+      "task_name": "turn_off_led",
+      "length_bucket": "[2526, 3473)",
+      "length": 2609.0,
+      "baseline_joint": 0.0045994633959371405,
+      "coord_joint": 0.007665772326561901,
+      "delta_joint": 0.0030663089306247606,
+      "baseline_text": "Instruction: turn off the led light Assistant response: the the the the the the the the the the the the the the the the \\\" the the\\\" the the \\\" the...",
+      "coord_text": "Instruction: turn off the led light Assistant response: the the the the the the the the the the the the the the the the the the the the the the the...",
+      "baseline_metrics": {
+        "text_region_token_acc": 0.04669260700389105,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.0045994633959371405,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 257.0,
+        "action_region_tokens": 2352.0,
+        "joint_region_tokens": 2609.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.3363166162744164
+      },
+      "coordinated_metrics": {
+        "text_region_token_acc": 0.07782101167315175,
+        "action_region_token_acc": 0.0,
+        "joint_region_token_acc": 0.007665772326561901,
+        "text_region_exact": 0.0,
+        "action_region_exact": 0.0,
+        "joint_region_exact": 0.0,
+        "text_region_tokens": 257.0,
+        "action_region_tokens": 2352.0,
+        "joint_region_tokens": 2609.0,
+        "effective_steps": 8.0,
+        "latency_sec": 2.410207685083151
+      },
+      "baseline_signals": {
+        "token_count": 40.0,
+        "unique_ratio": 0.3,
+        "adjacent_repeat_ratio": 0.48717948717948717,
+        "punctuation_ratio": 0.275,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.55,
+        "max_repeat_run": 16.0
+      },
+      "coordinated_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.2777777777777778,
+        "adjacent_repeat_ratio": 0.6857142857142857,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6666666666666666,
+        "max_repeat_run": 23.0
+      },
+      "analysis_side": "coordinated",
+      "analysis_signals": {
+        "token_count": 36.0,
+        "unique_ratio": 0.2777777777777778,
+        "adjacent_repeat_ratio": 0.6857142857142857,
+        "punctuation_ratio": 0.1388888888888889,
+        "digit_ratio": 0.0,
+        "top_token_share": 0.6666666666666666,
+        "max_repeat_run": 23.0
+      },
+      "labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "baseline_labels": [
+        "repetition_collapse",
+        "punctuation_collapse",
+        "action_failure"
+      ],
+      "coordinated_labels": [
+        "repetition_collapse",
+        "text_only_gain",
+        "action_failure"
+      ],
+      "bucket_index": 1,
+      "preview": "Instruction: turn off the led light Assistant response: the the the the the the the the the the the the the the the the the the the the the the the..."
+    }
+  ],
+  "next_steps": [
+    "优先处理 action 表示压缩，因为长度分桶里长序列通常伴随更高的重复和标点塌缩。",
+    "如果希望 coordination 真正起作用，需要先确认 backbone 能在同一 joint target 上给出更稳定的序列结构。",
+    "当前最强信号不是 joint 提升，而是 text 端轻微改善但 action 端几乎没动。"
+  ]
+}

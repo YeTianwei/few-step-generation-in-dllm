@@ -4,6 +4,7 @@ Probe CALVIN joint infill data and write a Chinese README report.
 Run:
   cd /data/ytw/VLA_baseline/dllm
   /home/timer/miniconda3/envs/dllm/bin/python /data/ytw/VLA_baseline/dllm/examples/a2d/bd3lm/calvin_joint_infill_probe.py
+  /home/timer/miniconda3/envs/dllm/bin/python /data/ytw/VLA_baseline/dllm/examples/a2d/bd3lm/calvin_joint_infill_probe.py --action_representation bucketed_int
 """
 
 from __future__ import annotations
@@ -30,6 +31,7 @@ from calvin_joint_infill import (
     save_histogram,
     shuffled_examples,
     summarize_lengths,
+    normalize_action_representation,
     token_length_stats,
 )
 
@@ -41,11 +43,16 @@ class ScriptArguments:
     experiment_name: str | None = None
     seed: int = 42
     round_digits: int = 4
+    action_representation: str = "float_4dp"
+    action_bucket_count: int = 8
     model_name_or_path: str = "dllm-hub/Qwen3-0.6B-diffusion-bd3lm-v0.1"
 
     def __post_init__(self):
         self.model_name_or_path = dllm.utils.resolve_with_base_env(
             self.model_name_or_path, "BASE_MODELS_DIR"
+        )
+        self.action_representation = normalize_action_representation(
+            self.action_representation
         )
 
 
@@ -62,10 +69,12 @@ def main() -> None:
     figures_dir = ensure_dir(experiment_dir / "figures")
     examples = load_examples(Path(script_args.jsonl_path))
     tokenizer = dllm.utils.get_tokenizer(model_name_or_path=script_args.model_name_or_path)
-    token_stats, token_lengths, pass_rate = token_length_stats(
+    token_stats_by_representation, token_lengths, pass_rate = token_length_stats(
         tokenizer,
         examples,
+        action_representation=script_args.action_representation,
         round_digits=script_args.round_digits,
+        action_bucket_count=script_args.action_bucket_count,
     )
 
     task_counts: dict[str, int] = {}
@@ -109,7 +118,10 @@ def main() -> None:
         "top_tasks": top_tasks,
         "think_char_stats": summarize_lengths(think_lengths),
         "action_step_stats": summarize_lengths(action_steps),
-        "target_token_stats": token_stats,
+        "target_token_stats_by_representation": token_stats_by_representation,
+        "target_token_stats": token_stats_by_representation[
+            script_args.action_representation
+        ],
         "mask_validation_pass_rate": pass_rate,
     }
     config = config_to_dict(script_args)

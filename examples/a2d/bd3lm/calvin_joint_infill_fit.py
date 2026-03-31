@@ -4,6 +4,7 @@ Train only the coordination module on CALVIN joint infill data and write a Chine
 Run:
   cd /data/ytw/VLA_baseline/dllm
   CUDA_VISIBLE_DEVICES=0 /home/timer/miniconda3/envs/dllm/bin/python /data/ytw/VLA_baseline/dllm/examples/a2d/bd3lm/calvin_joint_infill_fit.py --experiment_name coord_train_eval_formal
+  CUDA_VISIBLE_DEVICES=0 /home/timer/miniconda3/envs/dllm/bin/python /data/ytw/VLA_baseline/dllm/examples/a2d/bd3lm/calvin_joint_infill_fit.py --experiment_name coord_train_eval_float2 --action_representation float_2dp
 """
 
 from __future__ import annotations
@@ -44,6 +45,7 @@ from calvin_joint_infill import (
     trim_text,
     with_experiment_metadata,
     iso_now,
+    normalize_action_representation,
 )
 
 
@@ -59,10 +61,15 @@ class ScriptArguments:
     learning_rate: float = 1e-3
     seed: int = 42
     round_digits: int = 4
+    action_representation: str = "float_4dp"
+    action_bucket_count: int = 8
 
     def __post_init__(self):
         self.model_name_or_path = dllm.utils.resolve_with_base_env(
             self.model_name_or_path, "BASE_MODELS_DIR"
+        )
+        self.action_representation = normalize_action_representation(
+            self.action_representation
         )
 
 
@@ -78,13 +85,24 @@ class SamplerConfig(dllm.core.samplers.CoordinationProxySamplerConfig):
 parser = transformers.HfArgumentParser((ScriptArguments, SamplerConfig))
 
 
-def _evaluate_cases(sampler, tokenizer, examples, sampler_config, round_digits):
+def _evaluate_cases(
+    sampler,
+    tokenizer,
+    examples,
+    sampler_config,
+    *,
+    action_representation: str,
+    round_digits: int,
+    action_bucket_count: int,
+):
     rows = []
     for example in examples:
         inputs, targets, _ = build_case(
             tokenizer=tokenizer,
             example=example,
+            action_representation=action_representation,
             round_digits=round_digits,
+            action_bucket_count=action_bucket_count,
         )
 
         baseline_config = SamplerConfig(**sampler_config.__dict__)
@@ -157,7 +175,9 @@ def main() -> None:
     examples, filter_stats = filter_by_token_length(
         tokenizer,
         examples,
+        action_representation=script_args.action_representation,
         round_digits=script_args.round_digits,
+        action_bucket_count=script_args.action_bucket_count,
         max_target_tokens=script_args.max_target_tokens,
     )
     train_examples, test_examples = split_examples_by_ratio(
@@ -189,7 +209,9 @@ def main() -> None:
             prompt_ids, target_ids, _ = build_case(
                 tokenizer=tokenizer,
                 example=example,
+                action_representation=script_args.action_representation,
                 round_digits=script_args.round_digits,
+                action_bucket_count=script_args.action_bucket_count,
             )
             inputs = [torch.tensor(prompt_ids, dtype=torch.long, device=model.device)]
             targets = [torch.tensor(target_ids, dtype=torch.long, device=model.device)]
@@ -263,7 +285,9 @@ def main() -> None:
         tokenizer=tokenizer,
         examples=test_examples,
         sampler_config=sampler_config,
+        action_representation=script_args.action_representation,
         round_digits=script_args.round_digits,
+        action_bucket_count=script_args.action_bucket_count,
     )
     baseline_agg = aggregate_metric_rows([row["baseline_metrics"] for row in eval_rows])
     coordinated_agg = aggregate_metric_rows(

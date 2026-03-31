@@ -4,6 +4,7 @@ Run baseline-only evaluation on a fixed 8:2 CALVIN split and write a Chinese REA
 Run:
   cd /data/ytw/VLA_baseline/dllm
   CUDA_VISIBLE_DEVICES=0 /home/timer/miniconda3/envs/dllm/bin/python /data/ytw/VLA_baseline/dllm/examples/a2d/bd3lm/calvin_joint_infill_eval.py --experiment_name baseline_eval_formal
+  CUDA_VISIBLE_DEVICES=0 /home/timer/miniconda3/envs/dllm/bin/python /data/ytw/VLA_baseline/dllm/examples/a2d/bd3lm/calvin_joint_infill_eval.py --experiment_name baseline_eval_float2 --action_representation float_2dp
 """
 
 from __future__ import annotations
@@ -40,6 +41,7 @@ from calvin_joint_infill import (
     split_examples_by_ratio,
     trim_text,
     with_experiment_metadata,
+    normalize_action_representation,
 )
 
 
@@ -53,10 +55,15 @@ class ScriptArguments:
     train_ratio: float = 0.8
     max_target_tokens: int = 4096
     round_digits: int = 4
+    action_representation: str = "float_4dp"
+    action_bucket_count: int = 8
 
     def __post_init__(self):
         self.model_name_or_path = dllm.utils.resolve_with_base_env(
             self.model_name_or_path, "BASE_MODELS_DIR"
+        )
+        self.action_representation = normalize_action_representation(
+            self.action_representation
         )
 
 
@@ -93,7 +100,9 @@ def main() -> None:
     examples, filter_stats = filter_by_token_length(
         tokenizer,
         examples,
+        action_representation=script_args.action_representation,
         round_digits=script_args.round_digits,
+        action_bucket_count=script_args.action_bucket_count,
         max_target_tokens=script_args.max_target_tokens,
     )
     train_examples, test_examples = split_examples_by_ratio(
@@ -115,7 +124,9 @@ def main() -> None:
         inputs, targets, action_text = build_case(
             tokenizer=tokenizer,
             example=example,
+            action_representation=script_args.action_representation,
             round_digits=script_args.round_digits,
+            action_bucket_count=script_args.action_bucket_count,
         )
         baseline_config = SamplerConfig(**sampler_config.__dict__)
         baseline_config.enable_coordination = False
