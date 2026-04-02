@@ -7,8 +7,11 @@ Run:
 
 from __future__ import annotations
 
+import json
+import os
 import time
 from dataclasses import dataclass
+from datetime import datetime
 
 import transformers
 
@@ -111,6 +114,7 @@ class ScriptArguments:
     model_name_or_path: str = "dllm-hub/Qwen3-0.6B-diffusion-bd3lm-v0.1"
     seed: int = 42
     visualize: bool = False
+    output_dir: str = "outputs/dynamic_summary"
 
     def __post_init__(self):
         self.model_name_or_path = dllm.utils.resolve_with_base_env(
@@ -160,12 +164,24 @@ def main() -> None:
     script_args, sampler_config = parser.parse_args_into_dataclasses()
     transformers.set_seed(script_args.seed)
 
+    # --- Setup output directory ---
+    run_name = (
+        f"steps{sampler_config.steps}"
+        f"_src-{sampler_config.summary_source}"
+        f"_ntok{sampler_config.num_summary_tokens}"
+        f"_seed{script_args.seed}"
+    )
+    run_dir = os.path.join(script_args.output_dir, run_name)
+    os.makedirs(run_dir, exist_ok=True)
+
     model = dllm.utils.get_model(model_args=script_args).eval()
     tokenizer = dllm.utils.get_tokenizer(model_args=script_args)
     sampler = dllm.core.samplers.DynamicSummarySampler(
         model=model, tokenizer=tokenizer
     )
     terminal_visualizer = dllm.utils.TerminalVisualizer(tokenizer=tokenizer)
+
+    all_results = []
 
     for idx, (instruction, text_target, action_target) in enumerate(get_default_cases()):
         inputs, targets = _make_proxy_case(
@@ -200,8 +216,28 @@ def main() -> None:
             f"baseline_latency={baseline_latency:.3f}s "
             f"summary_latency={summary_latency:.3f}s"
         )
-        _report_metrics(tokenizer, baseline, targets, label="baseline")
-        _report_metrics(tokenizer, summary_result, targets, label="summary")
+        baseline_metrics = _report_metrics(tokenizer, baseline, targets, label="baseline")
+        summary_metrics = _report_metrics(tokenizer, summary_result, targets, label="summary")
+
+        all_results.append({
+            "case_idx": idx,
+            "instruction": instruction,
+            "baseline": {
+                **baseline_metrics,
+                "latency": baseline_latency,
+                "prediction": tokenizer.decode(
+                    baseline.sequences[0].tolist(), skip_special_tokens=False
+                ),
+            },
+            "summary": {
+                **summary_metrics,
+                "latency": summary_latency,
+                "prediction": tokenizer.decode(
+                    summary_result.sequences[0].tolist(), skip_special_tokens=False
+                ),
+            },
+            "target": tokenizer.decode(targets, skip_special_tokens=False),
+        })
 
         if script_args.visualize:
             terminal_visualizer.visualize(
@@ -209,6 +245,54 @@ def main() -> None:
                 rich=True,
                 title=f"summary case {idx}",
             )
+
+    # --- Aggregate and save ---
+    avg = lambda key, method: sum(r[method][key] for r in all_results) / len(all_results)
+    summary_report = {
+        "config": {
+            "model": script_args.model_name_or_path,
+            "steps": sampler_config.steps,
+            "summary_source": sampler_config.summary_source,
+            "num_summary_tokens": sampler_config.num_summary_tokens,
+            "temperature": sampler_config.temperature,
+            "seed": script_args.seed,
+        },
+        "avg_metrics": {
+            "baseline": {
+                "joint_acc": avg("token_acc", "baseline"),
+                "text_acc": avg("text_acc", "baseline"),
+                "action_acc": avg("action_acc", "baseline"),
+                "exact": avg("exact", "baseline"),
+                "latency": avg("latency", "baseline"),
+            },
+            "summary": {
+                "joint_acc": avg("token_acc", "summary"),
+                "text_acc": avg("text_acc", "summary"),
+                "action_acc": avg("action_acc", "summary"),
+                "exact": avg("exact", "summary"),
+                "latency": avg("latency", "summary"),
+            },
+        },
+        "per_case": all_results,
+        "timestamp": datetime.now().isoformat(),
+    }
+
+    results_path = os.path.join(run_dir, "results.json")
+    with open(results_path, "w", encoding="utf-8") as f:
+        json.dump(summary_report, f, indent=2, ensure_ascii=False)
+
+    # --- Print summary table ---
+    print("\n" + "=" * 80)
+    print("SUMMARY")
+    print("=" * 80)
+    for method in ("baseline", "summary"):
+        m = summary_report["avg_metrics"][method]
+        print(
+            f"  [{method:>8s}] joint={m['joint_acc']:.3f}  text={m['text_acc']:.3f}  "
+            f"action={m['action_acc']:.3f}  exact={m['exact']:.2f}  "
+            f"latency={m['latency']:.3f}s"
+        )
+    print(f"\nResults saved to: {results_path}")
 
 
 if __name__ == "__main__":
