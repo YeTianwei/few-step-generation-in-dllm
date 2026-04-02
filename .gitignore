@@ -1,6 +1,5 @@
-# Experiment outputs
-outputs/
-./claude
+# Claude Code config
+.claude/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
