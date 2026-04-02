@@ -1,5 +1,6 @@
 from .base import BaseSampler, BaseSamplerConfig, BaseSamplerOutput
 from .bd3lm import BD3LMSampler, BD3LMSamplerConfig
+from .dynamic_summary import DynamicSummarySampler, DynamicSummarySamplerConfig
 from .coord_proxy import (
     CoordinationModule,
     CoordinationProxySampler,
@@ -20,6 +21,8 @@ __all__ = [
     "CoordinationProxySampler",
     "CoordinationProxySamplerConfig",
     "CoordinationSamplerOutput",
+    "DynamicSummarySampler",
+    "DynamicSummarySamplerConfig",
     "MDLMSampler",
     "MDLMSamplerConfig",
     "add_gumbel_noise",
