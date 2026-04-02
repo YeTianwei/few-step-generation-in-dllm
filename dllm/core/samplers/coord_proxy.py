@@ -314,14 +314,33 @@ class CoordinationProxySampler(BaseSampler):
         try:
             hidden_states = self._extract_last_hidden_state(outputs)
         except ValueError:
-            if not hasattr(self.model, "model"):
+            base_candidates = []
+            if hasattr(self.model, "model"):
+                base_candidates.append(self.model.model)
+                if hasattr(self.model.model, "model"):
+                    base_candidates.append(self.model.model.model)
+            if hasattr(self.model, "base_model") and hasattr(self.model.base_model, "model"):
+                base_candidates.append(self.model.base_model.model)
+                if hasattr(self.model.base_model.model, "model"):
+                    base_candidates.append(self.model.base_model.model.model)
+
+            hidden_states = None
+            for base_forward in base_candidates:
+                try:
+                    base_outputs = base_forward(
+                        input_ids=x,
+                        attention_mask=attention_mask,
+                        output_hidden_states=True,
+                        return_dict=True,
+                        use_cache=False,
+                    )
+                    hidden_states = self._extract_last_hidden_state(base_outputs)
+                    break
+                except Exception:
+                    continue
+
+            if hidden_states is None:
                 raise
-            base_outputs = self.model.model(
-                input_ids=x,
-                attention_mask=attention_mask,
-                use_cache=False,
-            )
-            hidden_states = self._extract_last_hidden_state(base_outputs)
         return logits, hidden_states
 
     def _get_coord_hidden_size(

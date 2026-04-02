@@ -10,6 +10,7 @@ Run:
 
 from __future__ import annotations
 
+import json
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -144,12 +145,19 @@ def _compute_biased_logits(
     *,
     enable_coordination: bool,
 ):
+    if not enable_coordination:
+        outputs = sampler.model(
+            x,
+            attention_mask=attention_mask,
+            return_dict=True,
+            use_cache=False,
+        )
+        return outputs.logits
+
     logits, hidden_states = sampler.forward_proxy_model(
         x=x,
         attention_mask=attention_mask,
     )
-    if not enable_coordination:
-        return logits
 
     coord_features = sampler.compute_coordination_features(
         hidden_states=hidden_states,
