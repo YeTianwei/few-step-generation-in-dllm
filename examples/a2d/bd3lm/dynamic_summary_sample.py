@@ -68,13 +68,25 @@ def load_calvin_examples(
     jsonl_path: str,
     max_samples: int | None = None,
     action_bucket_count: int = 8,
+    split_manifest: str | None = None,
+    eval_only: bool = False,
 ) -> list[dict]:
+    # Load split filter if provided
+    allowed_ids: set[str] | None = None
+    if split_manifest:
+        with open(split_manifest, "r", encoding="utf-8") as f:
+            manifest = json.load(f)
+        if eval_only:
+            allowed_ids = set(manifest["test_sample_ids"])
+        else:
+            allowed_ids = set(manifest["train_sample_ids"])
+
     examples = []
     with open(jsonl_path, "r", encoding="utf-8") as f:
-        for line_idx, line in enumerate(f):
-            if max_samples is not None and line_idx >= max_samples:
-                break
+        for line in f:
             row = json.loads(line)
+            if allowed_ids is not None and row["sample_id"] not in allowed_ids:
+                continue
             serialized_actions = serialize_actions_bucketed(
                 row["actions"], action_bucket_count
             )
@@ -89,6 +101,8 @@ def load_calvin_examples(
                 "instruction": row["instruction"],
                 "target_text": target_text,
             })
+            if max_samples is not None and len(examples) >= max_samples:
+                break
     return examples
 
 
@@ -157,11 +171,14 @@ def _compute_metrics(
 @dataclass
 class ScriptArguments:
     model_name_or_path: str = "dllm-hub/Qwen3-0.6B-diffusion-bd3lm-v0.1"
+    adapter_path: str | None = None
     seed: int = 42
     output_dir: str = "outputs/dynamic_summary"
     data_path: str = ""
     max_samples: int | None = None
     action_bucket_count: int = 8
+    split_manifest: str | None = None
+    eval_only: bool = False
 
     def __post_init__(self):
         self.model_name_or_path = dllm.utils.resolve_with_base_env(
@@ -208,8 +225,11 @@ def main() -> None:
         jsonl_path=script_args.data_path,
         max_samples=script_args.max_samples,
         action_bucket_count=script_args.action_bucket_count,
+        split_manifest=script_args.split_manifest,
+        eval_only=script_args.eval_only,
     )
-    print(f"Loaded {len(examples)} examples from {script_args.data_path}")
+    split_label = "eval" if script_args.eval_only else "all"
+    print(f"Loaded {len(examples)} examples ({split_label}) from {script_args.data_path}")
 
     # --- Setup output directory ---
     summary_tag = (
@@ -217,8 +237,10 @@ def main() -> None:
         if sampler_config.enable_summary
         else "off"
     )
+    model_tag = "lora" if script_args.adapter_path else "base"
     run_name = (
-        f"steps{sampler_config.steps}"
+        f"{model_tag}"
+        f"_steps{sampler_config.steps}"
         f"_summary-{summary_tag}"
         f"_n{len(examples)}"
         f"_seed{script_args.seed}"
@@ -229,6 +251,14 @@ def main() -> None:
     # --- Load model ---
     model = dllm.utils.get_model(model_args=script_args).eval()
     tokenizer = dllm.utils.get_tokenizer(model_args=script_args)
+
+    if script_args.adapter_path:
+        from peft import PeftModel
+        print(f"Loading LoRA adapter from {script_args.adapter_path}")
+        model = PeftModel.from_pretrained(model, script_args.adapter_path)
+        model = model.merge_and_unload()
+        model = model.eval()
+        print("LoRA adapter merged.")
     sampler = dllm.core.samplers.DynamicSummarySampler(
         model=model, tokenizer=tokenizer
     )
@@ -297,6 +327,7 @@ def main() -> None:
     summary_report = {
         "config": {
             "model": script_args.model_name_or_path,
+            "adapter_path": script_args.adapter_path,
             "data_path": script_args.data_path,
             "steps": sampler_config.steps,
             "summary_source": sampler_config.summary_source,

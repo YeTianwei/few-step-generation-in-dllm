@@ -1,0 +1,61 @@
+{
+  "baseline": {
+    "text_region_token_acc": 0.04535429578245709,
+    "action_region_token_acc": 0.1992818671454219,
+    "joint_region_token_acc": 0.14546323100881844,
+    "text_region_exact": 0.0,
+    "action_region_exact": 0.0,
+    "joint_region_exact": 0.0,
+    "text_region_tokens": 285.0,
+    "action_region_tokens": 759.5,
+    "joint_region_tokens": 1044.5,
+    "effective_steps": 8.0,
+    "latency_sec": 0.7244605720043182
+  },
+  "trained": {
+    "text_region_token_acc": 0.01233967053141287,
+    "action_region_token_acc": 0.0029766681472247003,
+    "joint_region_token_acc": 0.005786446539979172,
+    "text_region_exact": 0.0,
+    "action_region_exact": 0.0,
+    "joint_region_exact": 0.0,
+    "text_region_tokens": 285.0,
+    "action_region_tokens": 759.5,
+    "joint_region_tokens": 1044.5,
+    "effective_steps": 8.0,
+    "latency_sec": 1.5000789295881987
+  },
+  "coordinated": null,
+  "epoch_losses": [
+    6.84375
+  ],
+  "filter_stats": {
+    "kept": 1000,
+    "dropped": 0
+  },
+  "split_manifest": {
+    "split_date": "2026-03-31",
+    "split_timestamp": "2026-03-31T17:39:51",
+    "seed": 42,
+    "train_ratio": 0.8,
+    "train_count": 2,
+    "test_count": 2,
+    "train_sample_ids": [
+      "lift_pink_block_slider_0981473_0981537",
+      "turn_off_led_1054784_1054848"
+    ],
+    "test_sample_ids": [
+      "rotate_blue_block_left_1504812_1504876",
+      "turn_off_lightbulb_1430331_1430368"
+    ]
+  },
+  "training_summary": {
+    "epochs_completed": 1,
+    "final_train_loss": 6.84375,
+    "trainable_param_count": 20185088,
+    "artifacts": {
+      "backbone_adapter": "/data/ytw/VLA_baseline/dllm/outputs/calvin_joint_infill/backbone_lora_bucketed_smoke_debug2/backbone_adapter"
+    },
+    "device": "cuda"
+  }
+}

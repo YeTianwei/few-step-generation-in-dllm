@@ -1,6 +1,11 @@
 # Claude Code config
 .claude/
 
+# Large model weight files
+*.safetensors
+*.pt
+*.bin
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

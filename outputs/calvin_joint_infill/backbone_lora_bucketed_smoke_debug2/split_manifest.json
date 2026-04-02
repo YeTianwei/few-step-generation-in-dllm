@@ -1,0 +1,16 @@
+{
+  "split_date": "2026-03-31",
+  "split_timestamp": "2026-03-31T17:39:51",
+  "seed": 42,
+  "train_ratio": 0.8,
+  "train_count": 2,
+  "test_count": 2,
+  "train_sample_ids": [
+    "lift_pink_block_slider_0981473_0981537",
+    "turn_off_led_1054784_1054848"
+  ],
+  "test_sample_ids": [
+    "rotate_blue_block_left_1504812_1504876",
+    "turn_off_lightbulb_1430331_1430368"
+  ]
+}
