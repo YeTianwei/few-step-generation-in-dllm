@@ -1,18 +1,21 @@
 """Generate a toy VLA dataset with LLM APIs.
 
 Run:
-    python /data/ytw/VLA_baseline/dllm/data/generate_toy_dataset.py
+    conda activate ~/miniconda3/envs/dllm
+    set GEMINI_API_KEY=your_api_key
+    python d:\master\HKUST RA\BlockDiff-VLA\dllm\data\generate_toy_dataset.py
 """
 
 import asyncio
 import json
+import os
 import random
 import re
 from google import genai
 from google.genai import types
 
 # ================= 配置区 =================
-API_KEY = "AIzaSyBZaoeoimllx7G93EZQQN4KjQpAnJygcIg"
+API_KEY_ENV_VAR = "GEMINI_API_KEY"
 MODEL_NAME = "gemini-2.5-flash"  # 在当前环境中已验证可用
 
 TARGET_TOTAL_SAMPLES = 2000
@@ -292,8 +295,13 @@ def parse_and_validate_json_response(content: str) -> list[dict[str, str]]:
 
 def create_genai_client() -> genai.Client:
     """Create a Gemini client using the stable sync transport."""
+    api_key = os.environ.get(API_KEY_ENV_VAR)
+    if not api_key:
+        raise RuntimeError(
+            f"Missing {API_KEY_ENV_VAR}. Set it in your environment before running this script."
+        )
     return genai.Client(
-        api_key=API_KEY,
+        api_key=api_key,
         http_options=types.HttpOptions(timeout=REQUEST_TIMEOUT * 1000),
     )
 
