@@ -208,6 +208,7 @@ class SamplerConfig(dllm.core.samplers.DynamicSummarySamplerConfig):
     enable_summary: bool = True
     num_summary_tokens: int = 2
     summary_source: str = "hidden_states"
+    remask_ratio: float = 0.0
 
 
 parser = transformers.HfArgumentParser((ScriptArguments, SamplerConfig))
@@ -238,10 +239,12 @@ def main() -> None:
         else "off"
     )
     model_tag = "lora" if script_args.adapter_path else "base"
+    remask_tag = f"_remask{sampler_config.remask_ratio}" if sampler_config.remask_ratio > 0 else ""
     run_name = (
         f"{model_tag}"
         f"_steps{sampler_config.steps}"
         f"_summary-{summary_tag}"
+        f"{remask_tag}"
         f"_n{len(examples)}"
         f"_seed{script_args.seed}"
     )
@@ -333,6 +336,7 @@ def main() -> None:
             "summary_source": sampler_config.summary_source,
             "num_summary_tokens": sampler_config.num_summary_tokens,
             "temperature": sampler_config.temperature,
+            "remask_ratio": sampler_config.remask_ratio,
             "seed": script_args.seed,
             "num_examples": len(all_results),
             "num_skipped": skipped,

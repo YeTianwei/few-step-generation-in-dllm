@@ -36,6 +36,8 @@ class DynamicSummarySamplerConfig(BaseSamplerConfig):
     num_summary_tokens: int = 2  # 2 = one per region, 1 = merged
     summary_source: str = "hidden_states"  # "hidden_states" | "embeddings"
     summary_position_id: int = 0
+    # Rollback remasking
+    remask_ratio: float = 0.0  # 0.0 = disabled, 0.1 = re-mask 10% of fixed tokens per step
     # Region markers
     text_start_marker: str = "Assistant response:"
     text_end_marker: str = "Action sequence:"
@@ -215,6 +217,7 @@ class DynamicSummarySampler(BaseSampler):
         stochastic_transfer = kwargs.get("stochastic_transfer", config.stochastic_transfer)
         return_dict = kwargs.get("return_dict", config.return_dict)
         enable_summary = kwargs.get("enable_summary", config.enable_summary)
+        remask_ratio = kwargs.get("remask_ratio", config.remask_ratio)
 
         mask_id = self.tokenizer.mask_token_id
         eos_id = self.tokenizer.eos_token_id
@@ -327,6 +330,24 @@ class DynamicSummarySampler(BaseSampler):
                         transfer_index[j, select_idx] = True
 
                 x[transfer_index] = x0[transfer_index]
+
+                # ----- Rollback remasking: re-mask low-confidence fixed tokens -----
+                if remask_ratio > 0.0 and s < effective_steps - 1:
+                    infill_region = (text_mask | action_mask) & attention_mask.bool()
+                    fixed_in_region = (x != mask_id) & infill_region
+                    fixed_conf = torch.where(fixed_in_region, x0_p, torch.inf)
+
+                    for j in range(B):
+                        end_j = start + widths[j]
+                        fixed_conf[j, :start] = torch.inf
+                        fixed_conf[j, end_j:] = torch.inf
+
+                        n_fixed = int(fixed_in_region[j, start:end_j].sum().item())
+                        m = max(1, int(n_fixed * remask_ratio))
+                        if n_fixed > m:
+                            _, remask_idx = torch.topk(fixed_conf[j], k=m, largest=False)
+                            x[j, remask_idx] = mask_id
+
                 if histories is not None:
                     histories.append(x.clone())
 
